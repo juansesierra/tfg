@@ -39,17 +39,31 @@ html, body{
   margin-left: 20px;
 }
 
+#opciones-container {
+  display: -webkit-box;
+}
+
+.col-md-10 {
+  padding: 0;
+}
+
+#solucion-container {
+  height: 74%;
+}
+
+#btn-resolver {
+  position: relative;
+  left: 10%;
+}
+
 .cuadrados {
   border: 1px solid #ced4da;
   text-align: left;
-}
-
-#enunciado-label {
-  margin-left: 10px;
+  padding-left: 10px;
 }
 
 #respuesta-container {
-  height: 34%;
+  height: 34%
 }
 
 #app {
