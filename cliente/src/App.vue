@@ -19,24 +19,15 @@ html, body{
     position: absolute;
 }
 
-#app, #page-container {
+#app {
   height: 100%;
   width: 100%;
+  margin-top: 3%; 
 }
 
-#page-container {
-  display: flex;
-  margin-top: 2%;
-  margin-left: 5%;
-}
-
-.partes-container {
-  width: 40%;
-  height: 90%;
-}
-
-#parte-derecha {
-  margin-left: 20px;
+#enunciado-container {
+  height: 79%;
+  margin-bottom: 16px;
 }
 
 #opciones-container {
@@ -60,10 +51,6 @@ html, body{
   border: 1px solid #ced4da;
   text-align: left;
   padding-left: 10px;
-}
-
-#respuesta-container {
-  height: 34%
 }
 
 #app {
