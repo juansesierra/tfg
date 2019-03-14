@@ -19,24 +19,19 @@ html, body{
     position: absolute;
 }
 
-#app, #page-container {
+#app {
   height: 100%;
   width: 100%;
 }
 
-#page-container {
-  display: flex;
-  margin-top: 2%;
-  margin-left: 5%;
+#enunciado-container {
+  height: 79%;
+  max-height: 79% !important;
+  margin-bottom: 16px;
 }
 
-.partes-container {
-  width: 40%;
-  height: 90%;
-}
-
-#parte-derecha {
-  margin-left: 20px;
+.container {
+  margin-top: 3%; 
 }
 
 #opciones-container {
@@ -56,14 +51,18 @@ html, body{
   left: 10%;
 }
 
+#respuesta-container {
+  height: 35% !important;
+}
+
+#salida-container {
+  height: 26% !important;
+}
+
 .cuadrados {
   border: 1px solid #ced4da;
   text-align: left;
   padding-left: 10px;
-}
-
-#respuesta-container {
-  height: 34%
 }
 
 #app {

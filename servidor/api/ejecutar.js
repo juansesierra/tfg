@@ -20,9 +20,11 @@ app.post("/ejecutar", function(req, resp){
                     if (respuestaCompara.estado == 200) {
                         if (respuestaCompara.err == "") {
                             responseObj.data = "Ejecucion correcta";
+                            responseObj.salida = respuesta.salida;
                         }
                         else {
                             responseObj.data = respuestaCompara.err;
+                            responseObj.salida = respuesta.salida;
                         }
 
                         resp.send(responseObj);
@@ -60,7 +62,7 @@ function ejecutarPHP (callback) {
         else {
             fs.writeFileSync("salida.txt", salida)
 
-            callback({err : ""})
+            callback({err : "", salida: salida})
         }
     }); 
 }

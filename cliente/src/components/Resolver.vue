@@ -1,11 +1,23 @@
 <template>
-    <div id=page-container>
-        <div id="enunciado-container" class="partes-container cuadrados">
-            <span>Enunciado</span><br>
-            <span>Crea un programa que escriba por consola hola php!</span>
-        </div>
+    <div class="container">
+        <div class="row">
+        <div class="col-lg-6">
+            <div id="enunciado-container" class="cuadrados">
+                <span>Enunciado</span><br>
+                <span>Crea un programa que escriba por consola hola php!</span>
 
-        <div id="parte-derecha" class="partes-container">
+                
+            </div>
+            <div id="salida-container" class="cuadrados salidas">
+                    <span id="enunciado-label">Salida del programa:</span>
+                    <pre id="salida"> 
+                    
+                    </pre>
+            </div>   
+            
+        </div>    
+
+        <div  class="col-lg-6">
             <div id="opciones-container"> 
                 <div class="form-group col-md-10">
                     <select class="form-control col-md-4" v-model="lenguaje" id="lenguaje">
@@ -14,19 +26,20 @@
                 </div>
                  <button id="btn-resolver" @click.prevent="enviarSolucion"  class="btn btn-primary"> Resolver </button>
             </div>
-            <div id="solucion-container"> 
+            <div id="solucion-container" > 
                 <div class="form-group">
                     <textarea class="form-control" v-model="codigo" rows="16" id="codigo" placeholder="Escribe aquí tu solución"></textarea>
                 </div>
 
-                <div id="respuesta-container" class="cuadrados">
-                    <span id="enunciado-label">Salida</span>
+                <div id="respuesta-container" class="cuadrados salidas">
+                    <span id="enunciado-label">Respuesta</span>
                     <pre id="respuesta"> 
 
                     </pre>
                 </div>
 
             </div>
+        </div>
         </div>
     </div>
 </template>
@@ -55,8 +68,11 @@ export default {
 
         
         servicio_API.resolver(solucion).then(respuesta => {
-            console.log(respuesta.data);
+            console.log(respuesta);
+            
             document.getElementById('respuesta').innerHTML = respuesta.data;
+            document.getElementById('salida').innerHTML = respuesta.salida;
+
             /*
             if (respuesta != ''){
                 this.mensaje_error = respuesta
