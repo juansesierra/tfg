@@ -68,8 +68,11 @@ export default {
 
         
         servicio_API.resolver(solucion).then(respuesta => {
+            console.log(respuesta);
             
             document.getElementById('respuesta').innerHTML = respuesta.data;
+            document.getElementById('salida').innerHTML = respuesta.salida;
+
             /*
             if (respuesta != ''){
                 this.mensaje_error = respuesta
