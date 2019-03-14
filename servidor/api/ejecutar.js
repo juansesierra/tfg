@@ -6,7 +6,8 @@ app.post("/ejecutar", function(req, resp){
     let lenguaje = parseInt(req.body.lenguaje); // Lenguaje que va a ejecutar la aplicacion
     var responseObj = {};
 
-    let fichero = req.body.fichero;
+    let fichero = req.body.codigo;
+    
 
     // Escribimos el contenido en un nuevo fichero
     fs.writeFileSync("hola.php", fichero)
@@ -47,16 +48,18 @@ app.post("/ejecutar", function(req, resp){
 
 function ejecutarPHP (callback) {
     exec('docker run --rm -v "$PWD":/Users/juansebastiansierraangel/tfg '+
-    '-w /Users/juansebastiansierraangel/tfg php:7.2-cli php hola.php > salida.txt',
+    '-w /Users/juansebastiansierraangel/tfg php:7.2-cli php hola.php',
     // Pasamos los parámetros error, stdout la salida 
     // que mostrara el comando
-    function (error) {
+    function (error, salida) {
         // controlamos el error
         if (error !== null) {
-            console.log('exec error: ' + error);
-            callback({err : error});
+            console.log("error ejecucion: " + salida)
+            callback({err : salida});
         }
         else {
+            fs.writeFileSync("salida.txt", salida)
+
             callback({err : ""})
         }
     }); 
@@ -68,20 +71,22 @@ function compararSalidas (callback) {
     // que mostrara el comando
     function (error, salida, stderr) {
 
-        console.log ("salida: " + salida)
+        console.log ("salida comparar: " + salida)
+        
         // controlamos el error
-        if (salida !== null) {
+        if (error !== null) {
             // Hay diferencias entre los archivos, por lo tanto hay un error
             if (salida !== null) {
+                salida = salida.replace(/\\ No newline at end of file/gi, "")
                 callback({err : salida, estado: 200})
             }
             else {
-                callback({err : "", estado: 200})
+                console.log('exec error: ' + error);
+                callback({err : salida, estado: 500});
             }
         }
         else {
-            console.log('exec error: ' + error);
-            callback({err : error, estado: 500});
+            callback({err : "", estado: 200})
         }
     }); 
 }
