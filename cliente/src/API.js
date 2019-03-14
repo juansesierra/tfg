@@ -13,11 +13,6 @@ export class Servicio_API {
             if (respuesta.ok) {
                 return respuesta.json();
             }
-
-            // Algo ha ido mal en la peticion
-            else {
-               
-            }
         })
     }
 
