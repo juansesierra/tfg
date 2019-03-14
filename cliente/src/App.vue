@@ -22,12 +22,16 @@ html, body{
 #app {
   height: 100%;
   width: 100%;
-  margin-top: 3%; 
 }
 
 #enunciado-container {
   height: 79%;
+  max-height: 79% !important;
   margin-bottom: 16px;
+}
+
+.container {
+  margin-top: 3%; 
 }
 
 #opciones-container {
@@ -45,6 +49,14 @@ html, body{
 #btn-resolver {
   position: relative;
   left: 10%;
+}
+
+#respuesta-container {
+  height: 35% !important;
+}
+
+#salida-container {
+  height: 26% !important;
 }
 
 .cuadrados {

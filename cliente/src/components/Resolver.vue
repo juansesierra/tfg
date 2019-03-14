@@ -8,7 +8,7 @@
 
                 
             </div>
-            <div id="salida-container" class="cuadrados">
+            <div id="salida-container" class="cuadrados salidas">
                     <span id="enunciado-label">Salida del programa:</span>
                     <pre id="salida"> 
                     
@@ -26,12 +26,12 @@
                 </div>
                  <button id="btn-resolver" @click.prevent="enviarSolucion"  class="btn btn-primary"> Resolver </button>
             </div>
-            <div id="solucion-container"> 
+            <div id="solucion-container" > 
                 <div class="form-group">
                     <textarea class="form-control" v-model="codigo" rows="16" id="codigo" placeholder="Escribe aquí tu solución"></textarea>
                 </div>
 
-                <div id="respuesta-container" class="cuadrados">
+                <div id="respuesta-container" class="cuadrados salidas">
                     <span id="enunciado-label">Respuesta</span>
                     <pre id="respuesta"> 
 
@@ -68,7 +68,7 @@ export default {
 
         
         servicio_API.resolver(solucion).then(respuesta => {
-            console.log(respuesta.data);
+            
             document.getElementById('respuesta').innerHTML = respuesta.data;
             /*
             if (respuesta != ''){
