@@ -1,4 +1,5 @@
 express = require('express')
+Promise = require('bluebird')
 bodyParser = require('body-parser')
 fs = require('fs');
 var cors = require('cors')
@@ -6,28 +7,34 @@ var cors = require('cors')
 // variables globales
 app = express()
 jwt = require('jwt-simple');
-multer = require('multer');
+fileUpload = require('express-fileupload');
+
+Promise.promisifyAll(fileUpload);
 
 app.use(cors());
 
+// Para ejecutar comandos
 exec = require('child_process').exec;
 
-function capturaError (error, stdout)  {
-  // controlamos el error
-  if (error !== null) {
-      console.log('exec error: ' + error);
-      return {err:500};
-  }
-  else {
-      console.log (stdout);
-      return stdout;
-  }
-} 
+// Para conectar con base de datos
+knex = require('knex')({
+  client: 'sqlite3',
+  connection: {
+    filename: "./tfg_db.db"
+  },
+  useNullAsDefault: true
+});
+
+
+// Para subir archivos
+app.use(fileUpload())
 
 app.use(bodyParser.json());
 
 require  ("./api/user.js");
 require  ("./api/ejecutar.js");
+require  ("./api/reto.js");
+
 
 var server = app.listen(3000);
 
