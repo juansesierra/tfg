@@ -1,3 +1,2 @@
 <?php
-
-echo 'hola php!!';
+ echo 'hola desde archivo php prueba!!';
