@@ -4,28 +4,33 @@ if(!app)
 //"capa" web (no aparecen referencias al API de Knex)
 app.get("/retos/:id", function(pet, resp){
     let idReto = parseInt (pet.params.id);
-    obtenerReto(idReto, function(datos){
-        if (datos.err) {
-            resp.status(datos.err);
-            resp.end();
-        }
-        else {
-            resp.send(datos);
-        }
+    
+    obtenerReto(idReto)
+    .then(datos => {
+        
+        resp.send(datos);
+        
+    })
+    .catch(error => {
+        resp.status(error.err);
+        resp.end();
     })
 
 })
 
-function obtenerReto(id, callback) {
-    knex.select().from('reto').where("id",id)
-    .then(function(datos){
-        if(datos.length<1) {
-            callback({err:404});
-        }
+function obtenerReto(id) {
+    
+    return new Promise((resolve, reject)=>{
+        knex.select().from('reto').where("id",id)
+        .then(function(datos){
+            if(datos.length<1) {
+                reject({err:404});
+            }
 
-        else {
-            callback({data:datos[0]})
-        }
+            else {
+                resolve({data:datos[0]})
+            }
+        })
     })
 }  
 
@@ -35,7 +40,7 @@ app.get("/retos", function(pet, resp){
         data : 0
     }
 
-    listarRetos(function(datos){
+    listarRetos().then(datos => {
         if (datos.err) {
             resp.status(datos.err);
             resp.end();
@@ -48,11 +53,13 @@ app.get("/retos", function(pet, resp){
 
 })
  
-function listarRetos(callback) {
+function listarRetos() {
     
-    knex.select().from('reto').then(function(datos){
-        callback({
-            data: datos
+    return new Promise((resolve, reject)=>{
+        knex.select().from('reto').then(datos => {
+            resolve({
+                data: datos
+            })
         })
     })
 }
