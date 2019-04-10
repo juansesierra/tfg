@@ -58,6 +58,7 @@ function listarRetos(callback) {
 }
 
 function findByNombre(nombre, callback) {
+    
     if (nombre) {
         knex.select().from('reto').where("nombre", nombre)
         .then(function(datos){
@@ -78,7 +79,6 @@ function findByNombre(nombre, callback) {
 
 app.post('/retos', function (req, resp) {
     let nueva = req.body;
-    //console.log(req);
     var responseObj = {};
 
     if (req.files) {
@@ -91,8 +91,21 @@ app.post('/retos', function (req, resp) {
                 resp.status(reto.err)
 				resp.send({error: reto.message})                
 			}else{
-                console.log ("llamamos a subir archivos")
-                subirArchivos(req, resp);
+                subirArchivos(req, resp, solucion =>  {
+                    console.log(solucion)
+                    addSolucion(reto.data, solucion, response => {
+                       
+                        if (response.err) {
+                            resp.status(reto.err)
+				            resp.send({error: reto.message})
+                        }
+                        else {
+                            resp.status(201); // reto insertado               
+                            responseObj.data = "reto insertado con éxito!";
+                            resp.send(responseObj)
+                        }
+                    })
+                });
 			}
 		})
     } catch(err) {
@@ -101,27 +114,25 @@ app.post('/retos', function (req, resp) {
     }
 })
 
-function subirArchivos (req, resp) {
+function subirArchivos (req, resp, callback) {
     var solucion = {};
-    var responseObj = {};
 
-    console.log("entro");
-    exec ("mkdir ./retos/prueba", function (error) {
+    //console.log(req);
+    exec ("mkdir ./retos/" + req.body.nombre, function (error) {
         if (error == null) {
-            solucion.entrada = "./retos/prueba/"+req.files.entrada.name;
-            solucion.salida = "./retos/prueba/"+req.files.salida.name;
+            solucion.entrada = "./retos/" + req.body.nombre + "/" + req.files.entrada.name;
+            solucion.salida = "./retos/" + req.body.nombre + "/" + req.files.salida.name;
     
             let File = req.files.entrada;
     
             // Subimos la entrada al servidor
             File.mv(solucion.entrada).then( function () {
 
-                File.mv(solucion.salida);
+                return File.mv(solucion.salida);
 
             }).then(function () {
-                resp.status(201); // reto insertado               
-                responseObj.data = "reto insertado con éxito!";
-                resp.send(responseObj)
+            
+                callback(solucion);
 
             }).catch(function (err){
                 resp.status(500)
@@ -136,9 +147,10 @@ function subirArchivos (req, resp) {
 }
 
 function addSolucion (reto, solucion, callback) {
+    
     findByNombre(reto.nombre, function(nuevo) {
-        if(nuevo.data) {
-            callback({err:403});
+        if(nuevo.err) {
+            callback({err:nuevo.err});
         }
         //Si no existe lo insertamos 
         else {
@@ -177,7 +189,8 @@ function addReto (reto, callback) {
                         callback({err:500});            
                     }
                     else {
-                        callback({data:insertado});
+                        reto.id = insertado[0];
+                        callback({data:reto});
                     }
                 }) 
             } 
