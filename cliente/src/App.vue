@@ -26,7 +26,7 @@ html, body{
 
 #enunciado-container {
   height: 79%;
-  max-height: 79% !important;
+  max-height: 450px !important;
   margin-bottom: 16px;
 }
 
@@ -71,5 +71,11 @@ html, body{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+/*  Añadir retos  */
+
+#addReto_container {
+  padding: 5% 20%;
 }
 </style>

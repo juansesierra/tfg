@@ -11,7 +11,7 @@
             <div id="salida-container" class="cuadrados salidas">
                     <span id="enunciado-label">Salida del programa:</span>
                     <pre id="salida"> 
-                    
+                        
                     </pre>
             </div>   
             
