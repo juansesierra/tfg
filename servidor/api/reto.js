@@ -108,7 +108,7 @@ app.post('/retos', function (req, resp) {
         })
         .then (response => {
             resp.status(201); // reto insertado               
-            responseObj.data = "reto insertado con éxito!";
+            responseObj.data = "Reto insertado con éxito!";
             resp.send(responseObj)
         })
         .catch(error => {

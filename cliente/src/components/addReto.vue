@@ -51,6 +51,7 @@
 <script>
     import {Servicio_API} from './../API.js';
 
+
     var servicio_API = new Servicio_API();
 
     export default {
@@ -76,10 +77,21 @@
             formData.append('entrada', this.form.f_entrada)
             formData.append('salida', this.form.f_salida)
 
-            servicio_API.addReto(formData).then(respuesta => {
-                console.log(respuesta);
-            
-           
+            servicio_API.addReto(formData).then(respuesta => {   
+                // Reto insertado con exito             
+                if (respuesta.data) {
+                    this.$swal({
+                        type: 'success',
+                        title: respuesta.data,
+                    })
+                }
+                // Ha habido algún error
+                else {
+                    this.$swal({
+                        type: 'error',
+                        title: respuesta.error,
+                    })
+                }
             }); 
         },
         onReset(evt) {

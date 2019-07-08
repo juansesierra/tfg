@@ -22,9 +22,7 @@ export class Servicio_API {
             method: 'POST',
             body: formData
         }). then (function (respuesta) {
-            if (respuesta.ok) {
                 return respuesta.json();
-            }
         })
     }
 
