@@ -1,6 +1,6 @@
 export class Servicio_API { 
     
-    // Registrar un usuario
+    // Ejecutar una solucion
     resolver(solucion) {
         var url = "http://localhost:3000/ejecutar";
         return fetch (url, {
@@ -16,7 +16,15 @@ export class Servicio_API {
         })
     }
 
-    
+    addReto(formData) {
+        var url = "http://localhost:3000/retos";
+        return fetch (url, {
+            method: 'POST',
+            body: formData
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
 
 }
 
