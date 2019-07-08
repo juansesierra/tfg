@@ -26,5 +26,14 @@ export class Servicio_API {
         })
     }
 
+    getRetos() {
+        var url = "http://localhost:3000/retos";
+        return fetch (url, {
+            method: 'GET',
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
+
 }
 
