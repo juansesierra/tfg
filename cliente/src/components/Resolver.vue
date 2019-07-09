@@ -4,7 +4,7 @@
         <div class="col-lg-6">
             <div id="enunciado-container" class="cuadrados">
                 <span>Enunciado</span><br>
-                <span>Crea un programa que escriba por consola hola php!</span>
+                <span>{{this.descripcion}}</span>
 
                 
             </div>
@@ -55,8 +55,17 @@ export default {
     return {
         lenguaje: '',
         codigo: '',
-        
+        descripcion: '',
     }
+  },
+  created() {
+        servicio_API.getReto(this.$route.params.id).then(respuesta => {
+                        
+            if (respuesta.data) {
+                this.descripcion = respuesta.data.descripcion;
+            }
+           
+        }); 
   },
   methods: {
        enviarSolucion: function () {

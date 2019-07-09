@@ -7,6 +7,7 @@ import listadoRetos from '@/components/listadoRetos'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -19,7 +20,7 @@ export default new Router({
       component: addReto
     },
     {
-      path: '/resolver',
+      path: '/resolver/:id',
       name: 'Resolver',
       component: Resolver
     },

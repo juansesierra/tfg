@@ -1,16 +1,13 @@
 <template>
     <div>
-        <b-card title="Card title">
-            <b-card-text>
-            Some quick example text to build on the <em>card title</em> and make up the bulk of the card's
-            content.
-            </b-card-text>
+        <div v-for="reto in retos" :key="reto.id">
+            <b-card :title="reto.nombre">
 
-            <b-card-text>A second paragraph of text in the card.</b-card-text>
-
-            <a href="#" class="card-link">Card link</a>
-            <b-link href="#" class="card-link">Another link</b-link>
-        </b-card>
+                <b-card-text>{{reto.descripcion}}</b-card-text>
+                
+                <a :href="'/resolver/' + reto.id" class="card-link">Resolver</a>
+            </b-card>
+        </div>
     </div>
 </template>
 
@@ -22,7 +19,7 @@
     export default {
         data() {
             return {
-                items: null
+                retos: []
             }
         },
         created () {
@@ -30,7 +27,7 @@
             servicio_API.getRetos().then(respuesta => {   
                 console.log(respuesta)
                 if (respuesta.data) {
-                    this.items = respuesta.data;
+                    this.retos = respuesta.data;
                 }
             })
         },
