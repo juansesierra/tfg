@@ -1,0 +1,36 @@
+<template>
+    <div>
+        <div v-for="reto in retos" :key="reto.id">
+            <b-card :title="reto.nombre">
+
+                <b-card-text>{{reto.descripcion}}</b-card-text>
+                
+                <a :href="'/resolver/' + reto.id" class="card-link">Resolver</a>
+            </b-card>
+        </div>
+    </div>
+</template>
+
+<script>
+    import {Servicio_API} from './../API.js';
+
+    var servicio_API = new Servicio_API();
+
+    export default {
+        data() {
+            return {
+                retos: []
+            }
+        },
+        created () {
+            console.log("entro")
+            servicio_API.getRetos().then(respuesta => {   
+                console.log(respuesta)
+                if (respuesta.data) {
+                    this.retos = respuesta.data;
+                }
+            })
+        },
+        
+    }
+</script>
