@@ -14,7 +14,7 @@ Promise.promisifyAll(fileUpload);
 app.use(cors());
 
 // Para ejecutar comandos
-exec = require('child_process').exec;
+exec = require('child_process');
 
 // Para conectar con base de datos
 knex = require('knex')({

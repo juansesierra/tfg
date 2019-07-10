@@ -222,3 +222,20 @@ function addReto (reto) {
     })         
         
 }
+
+function obtenerSoluciones(reto) {
+    return new Promise((resolve, reject)=>{
+        knex.select().from('solucion_reto').where("reto",reto)
+        .then(function(datos){
+            if(datos.length<1) {
+                reject({err:404});
+            }
+
+            else {
+                resolve({data:datos})
+            }
+        })
+    })
+} 
+
+exports.obtenerSoluciones = obtenerSoluciones;

@@ -1,3 +1,5 @@
+const ApiR = require  ("./reto.js");
+
 if(!app)
     throw new Error('Express no existe en este contexto. RuntimeException.')
 
@@ -8,25 +10,31 @@ app.post("/ejecutar", function(req, resp){
     var respuestaEjecucion;
 
     let fichero = req.body.codigo;
-    
+    var soluciones;
 
     // Escribimos el contenido en un nuevo fichero
     fs.writeFileSync("hola.php", fichero)
 
     try {
-        ejecutarPHP()
+        // Obtenemos los datos del rato pasado por parametro
+        ApiR.obtenerSoluciones(req.body.idReto)
+        .then(datos => {
+            soluciones = datos.data;
+
+            console.log(soluciones)
+        
+            return ejecutarPHP()
+        })
         .then(respuesta => {
             respuestaEjecucion = respuesta;
-            return compararSalidas()        
-        })
-        .then (respuestaCompara => {
-            console.log(respuestaCompara);
-            if (respuestaCompara.err == "") {
+            var respuestaCompara = compararSalidas(soluciones)        
+       
+            if (respuestaCompara == "") {
                 responseObj.data = "Ejecucion correcta";
                 responseObj.salida = respuestaEjecucion.salida;
             }
             else {
-                responseObj.data = respuestaCompara.err;
+                responseObj.data = respuestaCompara;
                 responseObj.salida = respuestaEjecucion.salida;
             }
 
@@ -34,8 +42,14 @@ app.post("/ejecutar", function(req, resp){
         })
         .catch(respuesta => {
             console.log(respuesta);
-            resp.status(500)
-            resp.send({error:respuesta.err})
+            if (respuesta.err && respuesta.err== '404') {
+                resp.status(404);
+                resp.send();
+            }
+            else {
+                resp.status(500)
+                resp.send({error:respuesta.err})
+            }
         });     
     }
     catch(err){
@@ -48,7 +62,7 @@ app.post("/ejecutar", function(req, resp){
 function ejecutarPHP () {
     
     return new Promise((resolve, reject)=>{
-        exec('docker run --rm -v "$PWD":/Users/juansebastiansierraangel/tfg '+
+        exec.exec('docker run --rm -v "$PWD":/Users/juansebastiansierraangel/tfg '+
         '-w /Users/juansebastiansierraangel/tfg php:7.2-cli php hola.php',
         // Pasamos los parámetros error, stdout la salida 
         // que mostrara el comando
@@ -71,33 +85,22 @@ function ejecutarPHP () {
     })
 }
 
-function compararSalidas () {
-    return new Promise((resolve, reject)=>{
-        exec('diff -w salida.txt salida_esperada.txt',
-        // Pasamos los parámetros error, stdout la salida 
-        // que mostrara el comando
-        function (error, salida, stderr) {
 
-            console.log ("salida comparar: " + salida)
-            console.log("error interno al comparar:" + error)
-            
-            // controlamos el error
-            if (error !== null) {
-                // Hay diferencias entre los archivos, por lo tanto hay un error
-                if (salida !== null) {
-                    salida = salida.replace(/\\ No newline at end of file/gi, "")
-                    resolve({err : salida})
-                }
-                else {
-                    console.log('exec error: ' + error);
-                    reject({err : salida});
-                }
-            }
-            else {
-                resolve({err : ""})
-            }
-        }); 
-    })
+function compararSalidas (soluciones) {
+    var salida = '';
+   
+    try {
+        salida = exec.execSync ('diff -w salida.txt salida_esperada.txt');
+    }
+    
+    catch(ex) {
+        // Ha diferencia entre los archivos
+        salida = ex.stdout.toString();
+        salida = salida.replace(/\\ No newline at end of file\n/gi, "");
+        console.log("salida de comparar:")
+        console.log(salida)
+    }
+
+    return salida;
 }
-
 
