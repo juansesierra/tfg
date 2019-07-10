@@ -130,13 +130,14 @@ app.post('/retos', function (req, resp) {
 
 function subirArchivos (req, resp) {
     var solucion = {};
+    nombre_reto = escape(req.body.nombre)
 
     return new Promise((resolve, reject)=>{
         //console.log(req);
-        exec ("mkdir ./retos/" + req.body.nombre, function (error) {
+        exec.exec ("mkdir ./retos/" + nombre_reto, function (error) {
             if (error == null) {
-                solucion.entrada = "./retos/" + req.body.nombre + "/" + req.files.entrada.name;
-                solucion.salida = "./retos/" + req.body.nombre + "/" + req.files.salida.name;
+                solucion.entrada = "./retos/" + nombre_reto + "/" + req.files.entrada.name;
+                solucion.salida = "./retos/" + nombre_reto + "/" + req.files.salida.name;
         
                 let File = req.files.entrada;
         

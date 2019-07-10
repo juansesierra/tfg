@@ -72,23 +72,27 @@ export default {
           
         var solucion = {
             lenguaje : this.lenguaje,
-            codigo : this.codigo
+            codigo : this.codigo,
+            idReto : this.$route.params.id,
+            usuario : "juan"
         }
 
         
         servicio_API.resolver(solucion).then(respuesta => {
             console.log(respuesta);
             
-            document.getElementById('respuesta').innerHTML = respuesta.data;
-            document.getElementById('salida').innerHTML = respuesta.salida;
-
-            /*
-            if (respuesta != ''){
-                this.mensaje_error = respuesta
+            if (respuesta.data) {
+                document.getElementById('respuesta').innerHTML = respuesta.data;
             }
             else {
-                location.replace('/#/login');
-            }*/
+                document.getElementById('respuesta').innerHTML = respuesta.error;
+            }
+
+            if (respuesta.salida) {
+                document.getElementById('salida').innerHTML = respuesta.salida;
+            }
+
+            
         });                
           
       }

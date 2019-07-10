@@ -10,9 +10,7 @@ export class Servicio_API {
             },
             body: JSON.stringify(solucion)
         }). then (function (respuesta) {
-            if (respuesta.ok) {
                 return respuesta.json();
-            }
         })
     }
 

@@ -10,10 +10,11 @@ app.post("/ejecutar", function(req, resp){
     var respuestaEjecucion;
 
     let fichero = req.body.codigo;
+    var codigo = req.body.idReto+ "_" + req.body.usuario + ".php";
     var soluciones;
 
     // Escribimos el contenido en un nuevo fichero
-    fs.writeFileSync("hola.php", fichero)
+    fs.writeFileSync(codigo, fichero)
 
     try {
         // Obtenemos los datos del rato pasado por parametro
@@ -23,11 +24,11 @@ app.post("/ejecutar", function(req, resp){
 
             console.log(soluciones)
         
-            return ejecutarPHP()
+            return ejecutarPHP(codigo, soluciones[0].entrada)
         })
         .then(respuesta => {
             respuestaEjecucion = respuesta;
-            var respuestaCompara = compararSalidas(soluciones)        
+            var respuestaCompara = compararSalidas(soluciones[0].salida)        
        
             if (respuestaCompara == "") {
                 responseObj.data = "Ejecucion correcta";
@@ -59,11 +60,11 @@ app.post("/ejecutar", function(req, resp){
     
 })
 
-function ejecutarPHP () {
+function ejecutarPHP (codigo, entrada) {
     
     return new Promise((resolve, reject)=>{
         exec.exec('docker run --rm -v "$PWD":/Users/juansebastiansierraangel/tfg '+
-        '-w /Users/juansebastiansierraangel/tfg php:7.2-cli php hola.php',
+        '-w /Users/juansebastiansierraangel/tfg php:7.2-cli php ' + codigo + " " + entrada,
         // Pasamos los parámetros error, stdout la salida 
         // que mostrara el comando
         function (error, salida) {
@@ -86,11 +87,11 @@ function ejecutarPHP () {
 }
 
 
-function compararSalidas (soluciones) {
+function compararSalidas (salida_esperada) {
     var salida = '';
    
     try {
-        salida = exec.execSync ('diff -w salida.txt salida_esperada.txt');
+        salida = exec.execSync ('diff -w salida.txt ' + salida_esperada);
     }
     
     catch(ex) {
