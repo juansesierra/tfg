@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Resolver from '@/components/Resolver'
 import addReto from '@/components/addReto'
 import listadoRetos from '@/components/listadoRetos'
+import registro from '@/components/registro'
 
 Vue.use(Router)
 
@@ -13,6 +14,11 @@ export default new Router({
       path: '/',
       name: 'listadoRetos',
       component: listadoRetos
+    },
+    {
+      path: '/registro',
+      name: 'registro',
+      component: registro
     },
     {
       path: '/addReto',

@@ -42,5 +42,36 @@ export class Servicio_API {
         })
     }
 
+    // Registrar un usuario
+    addUser(user) {
+        var url = "http://localhost:3000/users";
+        return fetch (url, {
+            method: 'POST',
+            headers : {
+                'Content-type' : 'application/json'
+            },
+            body: JSON.stringify(user)
+        }). then (function (respuesta) {
+            if (respuesta.ok) {
+                return '';
+            }
+
+            // Algo ha ido mal en la peticion
+            else {
+                if (respuesta.status === 403) {
+                    return 'Ya existe el nombre de usuario, por favor prueba con otro';
+                }
+
+                else if (respuesta.status === 400) {
+                    return 'Por favor rellena todos los campos';
+                }
+
+                else {
+                    return 'Error en el servidor, por favor intentalo más tarde';
+                }
+            }
+        })
+    }
+
 }
 
