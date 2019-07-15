@@ -73,6 +73,10 @@ html, body{
   color: #2c3e50;
 }
 
+#codigo {
+  font-family: Courier;
+}
+
 /*  Añadir retos  */
 
 #addReto_container {

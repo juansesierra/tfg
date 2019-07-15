@@ -23,6 +23,10 @@ app.post("/ejecutar", function(req, resp){
             soluciones = datos.data;
 
             console.log(soluciones)
+
+            responseObj.entrada = fs.readFileSync(soluciones[0].entrada).toString();
+            responseObj.salida_esperada = fs.readFileSync(soluciones[0].salida).toString();
+
         
             return ejecutarPHP(codigo, soluciones[0].entrada)
         })
@@ -31,11 +35,11 @@ app.post("/ejecutar", function(req, resp){
             var respuestaCompara = compararSalidas(soluciones[0].salida)        
        
             if (respuestaCompara == "") {
-                responseObj.data = "Ejecucion correcta";
+                responseObj.data = "Ejecución correcta";
                 responseObj.salida = respuestaEjecucion.salida;
             }
             else {
-                responseObj.data = respuestaCompara;
+                responseObj.data = "Ejecución incorrecta";
                 responseObj.salida = respuestaEjecucion.salida;
             }
 
