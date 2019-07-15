@@ -9,10 +9,11 @@
                 
             </div>
             <div id="salida-container" class="cuadrados salidas">
-                    <span id="enunciado-label">Salida del programa:</span>
-                    <pre id="salida"> 
-                        
-                    </pre>
+                    <span id="enunciado-label">Resultado de la ejecución</span>
+                    <span id="salida"> 
+                        <br><br>Entrada: {{this.entrada}}
+                        <br>Salida: {{this.salida}}
+                    </span>
             </div>   
             
         </div>    
@@ -32,10 +33,14 @@
                 </div>
 
                 <div id="respuesta-container" class="cuadrados salidas">
-                    <span id="enunciado-label">Respuesta</span>
-                    <pre id="respuesta"> 
+                    <span id="enunciado-label">Respuesta<br></span>
+                    <span id="respuesta" :style="'color:' + this.color"> 
 
-                    </pre>
+                    </span>
+                    <span v-show="this.mostrar"> 
+                        <br>Entrada: {{this.entrada}}
+                        <br>Salida esperada: {{this.salida_esperada}}
+                    </span>
                 </div>
 
             </div>
@@ -56,6 +61,11 @@ export default {
         lenguaje: '',
         codigo: '',
         descripcion: '',
+        entrada: '',
+        salida_esperada: '',
+        salida: '',
+        mostrar: false,
+        color: 'black'
     }
   },
   created() {
@@ -72,23 +82,46 @@ export default {
           
         var solucion = {
             lenguaje : this.lenguaje,
-            codigo : this.codigo
+            codigo : this.codigo,
+            idReto : this.$route.params.id,
+            usuario : "juan"
         }
 
+        this.mostrar = false;
+        this.color = 'black';
+        this.entrada =  this.salida = this.salida_esperada = '';
+        document.getElementById('respuesta').innerHTML = '';
+
+    
         
         servicio_API.resolver(solucion).then(respuesta => {
             console.log(respuesta);
             
-            document.getElementById('respuesta').innerHTML = respuesta.data;
-            document.getElementById('salida').innerHTML = respuesta.salida;
-
-            /*
-            if (respuesta != ''){
-                this.mensaje_error = respuesta
+            if (respuesta.data) {
+                if (respuesta.data != "Ejecución correcta") {
+                    this.salida_esperada = respuesta.salida_esperada;
+                    this.mostrar = true;
+                    this.color = 'red';
+                }
+                else {
+                    this.color = 'green';
+                }
+                
+                document.getElementById('respuesta').innerHTML = respuesta.data;
             }
             else {
-                location.replace('/#/login');
-            }*/
+                this.color = 'red';
+                document.getElementById('respuesta').innerHTML = respuesta.error;
+            }
+
+            if (respuesta.entrada) {
+                this.entrada = respuesta.entrada;
+            }
+
+            if (respuesta.salida) {
+                this.salida = respuesta.salida;
+            }
+            
         });                
           
       }
