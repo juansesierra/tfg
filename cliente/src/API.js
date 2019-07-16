@@ -73,5 +73,27 @@ export class Servicio_API {
         })
     }
 
+    loginUser(user) {
+        var url = "http://localhost:3000/login";
+        return fetch (url, {
+            method: 'POST',
+            headers : {
+                'Content-type' : 'application/json'
+            },
+            body: JSON.stringify(user)
+        }). then (function (respuesta) {
+            if (respuesta.ok) {
+                return respuesta.json();
+            }
+
+            // Error al hacer login
+            else {
+                return 'Usuario o contraseña incorrectos';
+            }
+        
+        })
+
+    }
+
 }
 
