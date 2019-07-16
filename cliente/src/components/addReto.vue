@@ -22,7 +22,7 @@
             ></b-form-textarea>
         </b-form-group>
 
-        <div v-for="prueba in form.pruebas" :key="prueba">
+        <div v-for="prueba in form.pruebas" :key="prueba.id">
 
             <b-form-group id="input-group-3" label="Fichero de entrada:" label-for="input-entrada">
                 <b-form-file
@@ -65,6 +65,7 @@
             nombre: '',
             descripcion: '',
             pruebas: [{
+                id: 0,
                 f_entrada: null,
                 f_salida: null
             }]
@@ -80,8 +81,12 @@
 
             formData.append('nombre', this.form.nombre)
             formData.append('descripcion', this.form.descripcion)
-            formData.append('entrada', this.form.f_entrada)
-            formData.append('salida', this.form.f_salida)
+            //formData.append('pruebas', this.form.pruebas)
+            
+            for (var i=0; i<this.form.pruebas.length; i++) {
+                formData.append('entrada_'+i, this.form.pruebas[i].f_entrada);
+                formData.append('salida_'+i, this.form.pruebas[i].f_salida)
+            }
 
             servicio_API.addReto(formData).then(respuesta => {   
                 // Reto insertado con exito             
@@ -106,6 +111,7 @@
             this.form.nombre = ''
             this.form.descripcion = ''
             this.form.pruebas = [{
+                id: 0,
                 f_entrada: null,
                 f_salida: null
             }]
@@ -116,7 +122,10 @@
             })
         },
         addPrueba : function () {
+            var id = this.form.pruebas.length;
+
             this.form.pruebas.push({
+                id: id,
                 f_entrada: null,
                 f_salida: null
             })
