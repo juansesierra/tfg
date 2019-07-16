@@ -22,25 +22,29 @@
             ></b-form-textarea>
         </b-form-group>
 
-        <b-form-group id="input-group-3" label="Fichero de entrada:" label-for="input-entrada">
-            <b-form-file
-                id="input-entrada"
-                v-model="form.f_entrada"
-                required
-                placeholder="Selecciona el fichero de entrada"
-            ></b-form-file>
-        </b-form-group>
+        <div v-for="prueba in form.pruebas" :key="prueba">
 
-        <b-form-group id="input-group-3" label="Fichero de salida:" label-for="input-salida">
-            <b-form-file
-                id="input-salida"
-                v-model="form.f_salida"
-                required
-                placeholder="Selecciona el fichero de salida"
-            ></b-form-file>
-        </b-form-group>
+            <b-form-group id="input-group-3" label="Fichero de entrada:" label-for="input-entrada">
+                <b-form-file
+                    id="input-entrada"
+                    v-model="prueba.f_entrada"
+                    required
+                    placeholder="Selecciona el fichero de entrada"
+                ></b-form-file>
+            </b-form-group>
+
+            <b-form-group id="input-group-3" label="Fichero de salida:" label-for="input-salida">
+                <b-form-file
+                    id="input-salida"
+                    v-model="prueba.f_salida"
+                    required
+                    placeholder="Selecciona el fichero de salida"
+                ></b-form-file>
+            </b-form-group>
+        </div>
 
         <b-button type="submit" variant="primary">Añadir</b-button>
+        <b-button type="submit" @click.prevent="addPrueba" variant="info">Añadir entrada/salida</b-button>
         <b-button type="reset" variant="danger">Reiniciar</b-button>
         </b-form>
     </div>
@@ -60,8 +64,10 @@
             form: {
             nombre: '',
             descripcion: '',
-            f_entrada: null,
-            f_salida: null
+            pruebas: [{
+                f_entrada: null,
+                f_salida: null
+            }]
             },
             show: true
         }
@@ -99,12 +105,20 @@
             // Reset our form values
             this.form.nombre = ''
             this.form.descripcion = ''
-            this.form.f_entrada = null
-            this.form.f_salida = null
+            this.form.pruebas = [{
+                f_entrada: null,
+                f_salida: null
+            }]
             // Trick to reset/clear native browser form validation state
             this.show = false
             this.$nextTick(() => {
-            this.show = true
+                this.show = true
+            })
+        },
+        addPrueba : function () {
+            this.form.pruebas.push({
+                f_entrada: null,
+                f_salida: null
             })
         }
         }
