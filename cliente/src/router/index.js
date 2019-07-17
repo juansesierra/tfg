@@ -5,6 +5,8 @@ import addReto from '@/components/addReto'
 import listadoRetos from '@/components/listadoRetos'
 import registro from '@/components/registro'
 import login from '@/components/login'
+import editarReto from '@/components/editarReto'
+
 
 Vue.use(Router)
 
@@ -35,6 +37,11 @@ export default new Router({
       path: '/resolver/:id',
       name: 'Resolver',
       component: Resolver
+    },
+    {
+      path: '/editarReto/:id',
+      name: 'editarReto',
+      component: editarReto
     },
   ]
 })
