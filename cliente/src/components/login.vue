@@ -48,6 +48,8 @@ export default {
 
     methods: {
         enviar : function() {
+            this.mensaje_error = '';
+
             var user = {
                 "login" : this.username,
                 "password" : this.password

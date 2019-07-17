@@ -22,25 +22,29 @@
             ></b-form-textarea>
         </b-form-group>
 
-        <b-form-group id="input-group-3" label="Fichero de entrada:" label-for="input-entrada">
-            <b-form-file
-                id="input-entrada"
-                v-model="form.f_entrada"
-                required
-                placeholder="Selecciona el fichero de entrada"
-            ></b-form-file>
-        </b-form-group>
+        <div v-for="prueba in form.pruebas" :key="prueba.id">
 
-        <b-form-group id="input-group-3" label="Fichero de salida:" label-for="input-salida">
-            <b-form-file
-                id="input-salida"
-                v-model="form.f_salida"
-                required
-                placeholder="Selecciona el fichero de salida"
-            ></b-form-file>
-        </b-form-group>
+            <b-form-group id="input-group-3" label="Fichero de entrada:" label-for="input-entrada">
+                <b-form-file
+                    id="input-entrada"
+                    v-model="prueba.f_entrada"
+                    required
+                    placeholder="Selecciona el fichero de entrada"
+                ></b-form-file>
+            </b-form-group>
+
+            <b-form-group id="input-group-3" label="Fichero de salida:" label-for="input-salida">
+                <b-form-file
+                    id="input-salida"
+                    v-model="prueba.f_salida"
+                    required
+                    placeholder="Selecciona el fichero de salida"
+                ></b-form-file>
+            </b-form-group>
+        </div>
 
         <b-button type="submit" variant="primary">Añadir</b-button>
+        <b-button type="submit" @click.prevent="addPrueba" variant="info">Añadir entrada/salida</b-button>
         <b-button type="reset" variant="danger">Reiniciar</b-button>
         </b-form>
     </div>
@@ -60,8 +64,11 @@
             form: {
             nombre: '',
             descripcion: '',
-            f_entrada: null,
-            f_salida: null
+            pruebas: [{
+                id: 0,
+                f_entrada: null,
+                f_salida: null
+            }]
             },
             show: true
         }
@@ -74,8 +81,12 @@
 
             formData.append('nombre', this.form.nombre)
             formData.append('descripcion', this.form.descripcion)
-            formData.append('entrada', this.form.f_entrada)
-            formData.append('salida', this.form.f_salida)
+            //formData.append('pruebas', this.form.pruebas)
+            
+            for (var i=0; i<this.form.pruebas.length; i++) {
+                formData.append('entrada_'+i, this.form.pruebas[i].f_entrada);
+                formData.append('salida_'+i, this.form.pruebas[i].f_salida)
+            }
 
             servicio_API.addReto(formData).then(respuesta => {   
                 // Reto insertado con exito             
@@ -99,12 +110,24 @@
             // Reset our form values
             this.form.nombre = ''
             this.form.descripcion = ''
-            this.form.f_entrada = null
-            this.form.f_salida = null
+            this.form.pruebas = [{
+                id: 0,
+                f_entrada: null,
+                f_salida: null
+            }]
             // Trick to reset/clear native browser form validation state
             this.show = false
             this.$nextTick(() => {
-            this.show = true
+                this.show = true
+            })
+        },
+        addPrueba : function () {
+            var id = this.form.pruebas.length;
+
+            this.form.pruebas.push({
+                id: id,
+                f_entrada: null,
+                f_salida: null
             })
         }
         }
