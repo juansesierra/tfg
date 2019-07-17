@@ -22,26 +22,7 @@
             ></b-form-textarea>
         </b-form-group>
 
-        <div v-for="prueba in form.pruebas" :key="prueba.id">
-
-            <b-form-group id="input-group-3" label="Fichero de entrada:" label-for="input-entrada">
-                <b-form-file
-                    id="input-entrada"
-                    v-model="prueba.f_entrada"
-                    required
-                    placeholder="Selecciona el fichero de entrada"
-                ></b-form-file>
-            </b-form-group>
-
-            <b-form-group id="input-group-3" label="Fichero de salida:" label-for="input-salida">
-                <b-form-file
-                    id="input-salida"
-                    v-model="prueba.f_salida"
-                    required
-                    placeholder="Selecciona el fichero de salida"
-                ></b-form-file>
-            </b-form-group>
-        </div>
+        
 
         <b-button type="submit" variant="primary">Guardar</b-button>
         <b-button type="submit" @click.prevent="addPrueba" variant="info">Añadir entrada/salida</b-button>
@@ -88,15 +69,17 @@
 
             var formData = new FormData();
 
+            formData.append('id', this.$route.params.id)
             formData.append('nombre', this.form.nombre)
             formData.append('descripcion', this.form.descripcion)
             
+            /*
             for (var i=0; i<this.form.pruebas.length; i++) {
                 formData.append('entrada_'+i, this.form.pruebas[i].f_entrada);
                 formData.append('salida_'+i, this.form.pruebas[i].f_salida)
             }
-
-            servicio_API.addReto(formData).then(respuesta => {   
+            */
+            servicio_API.editarReto(formData).then(respuesta => {   
                 // Reto editado con exito             
                 if (respuesta.data) {
                     this.$swal({

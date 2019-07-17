@@ -34,13 +34,13 @@ function obtenerReto(id) {
     })
 }  
 
-// listado con todos las retos
+// retodo con todos las retos
 app.get("/retos", function(pet, resp){
     var respuesta = {
         data : 0
     }
 
-    listarRetos().then(datos => {
+    retorRetos().then(datos => {
         if (datos.err) {
             resp.status(datos.err);
             resp.end();
@@ -53,7 +53,7 @@ app.get("/retos", function(pet, resp){
 
 })
  
-function listarRetos() {
+function retorRetos() {
     
     return new Promise((resolve, reject)=>{
         knex.select().from('reto').then(datos => {
@@ -254,6 +254,62 @@ function obtenerSoluciones(reto) {
             }
         })
     })
-} 
+}
+
+app.put('/retos', function (req, resp) {
+    let reto = req.body;
+    var responseObj = {};
+    
+    try {
+        updateReto(reto).
+        then(function(editado){
+			if(editado.err){
+				resp.status(editado.err)
+				resp.end()
+			}else{
+				responseObj.data = "Reto modificado con éxito!";
+				resp.send(responseObj)
+			}
+        })
+        .catch(error => {
+            resp.status(error.err);
+            resp.end();
+        })
+    } catch(err) {
+        resp.status(500)
+		resp.send({error:err.message})
+    }
+})
+
+function updateReto (reto) {
+    return new Promise((resolve, reject)=>{
+
+        // buscamos si existe el reto 
+        knex('reto').where('id', reto.id).then (function (aux) {
+            
+            if(!aux[0]) {
+                reject({err:404});
+            }
+            //Si existe lo editamos
+            else {
+                console.log(reto);
+                knex('reto').where('id',reto.id).update({
+                    nombre: reto.nombre,
+                    descripcion: reto.descripcion
+                })
+                .then(function(editado) {
+                    if (editado<1) {
+                        reject({err:500});            
+                    }
+                    else {
+                        resolve({data:editado});
+                    }
+                })  
+            }
+            
+        })
+
+    })
+}
 
 exports.obtenerSoluciones = obtenerSoluciones;
