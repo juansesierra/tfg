@@ -24,38 +24,45 @@ app.post("/ejecutar", function(req, resp){
 
             console.log(soluciones)
 
-            responseObj.entrada = fs.readFileSync(soluciones[0].entrada).toString();
-            responseObj.salida_esperada = fs.readFileSync(soluciones[0].salida).toString();
+            var ejecuciones = ejecutarPHP(codigo, soluciones)
+            
+            Promise.all(ejecuciones).then(salidas => {
+                
+                var comparaOk = true;
+                
+                for (var i = 0; i<salidas.length && comparaOk; i++) {
+                    respuestaEjecucion = salidas[i].salida;
+                    var fichero_salida = "salida_" + i + ".txt";
+                    
+                    responseObj.entrada = fs.readFileSync(soluciones[i].entrada).toString();
+                    responseObj.salida_esperada = fs.readFileSync(soluciones[i].salida).toString();
 
+                    comparaOk = compararSalidas(fichero_salida, soluciones[i].salida)        
+                }
         
-            return ejecutarPHP(codigo, soluciones[0].entrada)
-        })
-        .then(respuesta => {
-            respuestaEjecucion = respuesta;
-            var respuestaCompara = compararSalidas(soluciones[0].salida)        
-       
-            if (respuestaCompara == "") {
-                responseObj.data = "Ejecución correcta";
-                responseObj.salida = respuestaEjecucion.salida;
-            }
-            else {
-                responseObj.data = "Ejecución incorrecta";
-                responseObj.salida = respuestaEjecucion.salida;
-            }
+                if (comparaOk) {
+                    responseObj.data = "Ejecución correcta";
+                }
+                else {
+                    responseObj.data = "Ejecución incorrecta";
+                }
 
-            resp.send(responseObj);
-        })
-        .catch(respuesta => {
-            console.log(respuesta);
-            if (respuesta.err && respuesta.err== '404') {
-                resp.status(404);
-                resp.send();
-            }
-            else {
-                resp.status(500)
-                resp.send({error:respuesta.err})
-            }
-        });     
+                responseObj.salida = respuestaEjecucion;
+
+                resp.send(responseObj);
+            })
+            .catch(respuesta => {
+                console.log(respuesta);
+                if (respuesta.err && respuesta.err== '404') {
+                    resp.status(404);
+                    resp.send();
+                }
+                else {
+                    resp.status(500)
+                    resp.send({error:respuesta.err})
+                }
+            });     
+        });
     }
     catch(err){
         resp.status(400);
@@ -64,38 +71,50 @@ app.post("/ejecutar", function(req, resp){
     
 })
 
-function ejecutarPHP (codigo, entrada) {
+function ejecutarPHP (codigo, entradas) {
+    var promesas = [];
+    var contador = 0;
     
-    return new Promise((resolve, reject)=>{
-        exec.exec('docker run --rm -v "$PWD":/Users/juansebastiansierraangel/tfg '+
-        '-w /Users/juansebastiansierraangel/tfg php:7.2-cli php ' + codigo + " " + entrada,
-        // Pasamos los parámetros error, stdout la salida 
-        // que mostrara el comando
-        function (error, salida) {
-            // controlamos el error
-            if (error !== null) {
-                console.log("error ejecucion: " + salida)
-                console.log ("error interno ejecucion:" + error)
-                reject({err : salida});
-            }
-            else {
-                console.log ("Salida de la ejecucion: " + salida)
-                console.log ("Salida de la ejecucion error: " + error)
+    for (var i=0; i<entradas.length; i++) {
+        promesas.push(new Promise((resolve, reject)=>{
+            // Recorremos todas las entradas
+            
+            exec.exec('docker run --rm -v "$PWD":/Users/juansebastiansierraangel/tfg '+
+            '-w /Users/juansebastiansierraangel/tfg php:7.2-cli php ' + codigo + " " + entradas[i].entrada,
+            // Pasamos los parámetros error, stdout la salida 
+            // que mostrara el comando
+            function (error, salida) {
+                // controlamos el error
+                if (error !== null) {
+                    console.log("error ejecucion: " + salida)
+                    console.log ("error interno ejecucion:" + error)
+                    reject({err : salida});
+                }
+                else {
+                    console.log ("Salida de la ejecucion: " + salida)
+                    console.log ("Salida de la ejecucion error: " + error)
+    
+                    fs.writeFileSync("salida_" + contador + ".txt", salida)
+                    contador++;
 
-                fs.writeFileSync("salida.txt", salida)
+                    resolve({err : "", salida: salida})
+                }
+            }); 
+         
+        }))
+    }
 
-                resolve({err : "", salida: salida})
-            }
-        }); 
-    })
+    return promesas;
+
 }
 
 
-function compararSalidas (salida_esperada) {
+function compararSalidas (fichero_salida, salida_esperada) {
     var salida = '';
+    var ok = true;
    
     try {
-        salida = exec.execSync ('diff -w salida.txt ' + salida_esperada);
+        salida = exec.execSync ('diff -w '+ fichero_salida + ' ' + salida_esperada);
     }
     
     catch(ex) {
@@ -104,8 +123,9 @@ function compararSalidas (salida_esperada) {
         salida = salida.replace(/\\ No newline at end of file\n/gi, "");
         console.log("salida de comparar:")
         console.log(salida)
+        ok = false;
     }
 
-    return salida;
+    return ok;
 }
 
