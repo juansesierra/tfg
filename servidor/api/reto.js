@@ -34,7 +34,7 @@ function obtenerReto(id) {
     })
 }  
 
-// retodo con todos las retos
+// listado con todos las retos
 app.get("/retos", function(pet, resp){
     var respuesta = {
         data : 0
@@ -64,7 +64,7 @@ function listarRetos() {
     })
 }
 
-// retodo con todos las retos
+// listado con todos las retos
 app.post("/misRetos", function(pet, resp){
     var respuesta = {
         data : 0
@@ -91,6 +91,39 @@ function listarMisRetos(usuario) {
             resolve({
                 data: datos
             })
+        })
+    })
+}
+
+// listado con todos las retos
+app.post("/retosResueltos", function(pet, resp){
+    var respuesta = {
+        data : 0
+    }
+    let usuario = parseInt (pet.body.usuario)
+
+    listarRetosResueltos(usuario).then(datos => {
+        if (datos.err) {
+            resp.status(datos.err);
+            resp.end();
+        }
+        else {
+            respuesta.data = datos.data;
+            resp.send(respuesta);
+        }
+    })
+
+})
+ 
+function listarRetosResueltos(usuario) {
+    
+    return new Promise((resolve, reject)=>{
+        knex('reto')
+        .join('reto_resuelto', 'reto.id', 'reto_resuelto.reto')
+        .select('reto.id as id','reto.nombre as nombre', 'reto.descripcion as descripcion').then(datos => {
+            resolve({
+                data: datos
+            })  
         })
     })
 }
@@ -344,4 +377,36 @@ function updateReto (reto) {
     })
 }
 
+function addResuelto (reto) {
+
+    return new Promise((resolve, reject)=>{
+        // buscamos si existe el reto a insertar
+        knex.select().from('reto_resuelto').where( {"reto": reto.id, "usuario": reto.usuario})
+            .then(function(datos){
+                console.log(datos)
+                if (datos.length>1) {
+                    resolve({data:datos})
+                }
+                else {
+                    console.log("entro")
+                    knex('reto_resuelto').insert({
+                        reto: reto.id,
+                        usuario: reto.usuario
+                    })
+                    .then(function(insertado) {
+                        if (insertado.length<1) {
+                            reject({err:500});            
+                        }
+                        else {
+                            reto.id = insertado[0];
+                            resolve({data:reto});
+                        }
+                    }) 
+                }
+
+            })
+    })         
+        
+}
 exports.obtenerSoluciones = obtenerSoluciones;
+exports.addResuelto = addResuelto;

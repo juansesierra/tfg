@@ -7,6 +7,8 @@ import registro from '@/components/registro'
 import login from '@/components/login'
 import editarReto from '@/components/editarReto'
 import misRetos from '@/components/misRetos'
+import retosResueltos from '@/components/retosResueltos'
+
 
 
 
@@ -39,6 +41,11 @@ export default new Router({
       path: '/misRetos',
       name: 'misRetos',
       component: misRetos
+    },
+    {
+      path: '/retosResueltos',
+      name: 'retosResueltos',
+      component: retosResueltos
     },
     {
       path: '/resolver/:id',

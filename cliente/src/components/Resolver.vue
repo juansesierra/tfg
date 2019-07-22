@@ -84,7 +84,8 @@ export default {
             lenguaje : this.lenguaje,
             codigo : this.codigo,
             idReto : this.$route.params.id,
-            usuario : "juan"
+            usuario : "juan",
+            idUsuario: localStorage.getItem('id_usuario')
         }
 
         this.mostrar = false;
