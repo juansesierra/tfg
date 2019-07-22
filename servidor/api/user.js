@@ -109,17 +109,25 @@ app.post('/login',function(req,resp){
 
 function login (credenciales,callback){
     if(credenciales.login && credenciales.password){
-        knex.select().from("Usuario").where({login:credenciales.login, password:credenciales.password})
+        knex.select().from("Usuario").where({login:credenciales.login})
         .then(function(datos){
             if(datos.length<1) {
                 callback({err:404});
             }
 
             else {
-                callback({data:datos})
+                bcrypt.compare(credenciales.password, datos[0].password).then(function(res) {
+                    if (res) {
+                        callback({data:datos})
+                    }
+                    else {
+                        callback({err:404});
+                    }
+                });
             }
 
         });
+
     }else{
         callback({err:400})
     }
@@ -155,15 +163,18 @@ function addUser (usuario, callback) {
         //Si no existe lo insertamos 
         else {
             if (usuario.login && usuario.password && usuario.email) {
-                knex('Usuario').insert({login: usuario.login, password: usuario.password, email: usuario.email})
-                .then(function(insertado) {
-                    if (insertado.length<1) {
-                        callback({err:500});            
-                    }
-                    else {
-                        callback({data:insertado});
-                    }
-                })  
+                // ciframos la contraseña
+                bcrypt.hash(usuario.password, 10).then(function(hash) {
+                    knex('Usuario').insert({login: usuario.login, password: hash, email: usuario.email})
+                    .then(function(insertado) {
+                        if (insertado.length<1) {
+                            callback({err:500});            
+                        }
+                        else {
+                            callback({data:insertado});
+                        }
+                    })  
+                });
             }
             else {
                 callback({
