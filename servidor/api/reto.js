@@ -64,6 +64,37 @@ function listarRetos() {
     })
 }
 
+// retodo con todos las retos
+app.post("/misRetos", function(pet, resp){
+    var respuesta = {
+        data : 0
+    }
+    let usuario = parseInt (pet.body.usuario)
+
+    listarMisRetos(usuario).then(datos => {
+        if (datos.err) {
+            resp.status(datos.err);
+            resp.end();
+        }
+        else {
+            respuesta.data = datos.data;
+            resp.send(respuesta);
+        }
+    })
+
+})
+ 
+function listarMisRetos(usuario) {
+    
+    return new Promise((resolve, reject)=>{
+        knex.select().from('reto').where("usuario", usuario).then(datos => {
+            resolve({
+                data: datos
+            })
+        })
+    })
+}
+
 function findByNombre(nombre) {
 
     return new Promise((resolve, reject)=>{
@@ -96,7 +127,6 @@ app.post('/retos', function (req, resp) {
     }
     
     try {
-
         addReto(nuevo)
         .then( response => {
             reto = response;
@@ -156,6 +186,7 @@ function subirArchivos (req, resp) {
                     })
 
                 }
+                resolve(ficheros);
 
             }
             else {
@@ -218,7 +249,8 @@ function addReto (reto) {
             if (reto.descripcion) {
                 knex('reto').insert({
                     nombre: reto.nombre,
-                    descripcion: reto.descripcion
+                    descripcion: reto.descripcion,
+                    usuario: reto.usuario
                 })
                 .then(function(insertado) {
                     if (insertado.length<1) {

@@ -6,6 +6,8 @@ import listadoRetos from '@/components/listadoRetos'
 import registro from '@/components/registro'
 import login from '@/components/login'
 import editarReto from '@/components/editarReto'
+import misRetos from '@/components/misRetos'
+
 
 
 Vue.use(Router)
@@ -32,6 +34,11 @@ export default new Router({
       path: '/addReto',
       name: 'addReto',
       component: addReto
+    },
+    {
+      path: '/misRetos',
+      name: 'misRetos',
+      component: misRetos
     },
     {
       path: '/resolver/:id',

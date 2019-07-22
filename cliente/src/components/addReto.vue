@@ -81,6 +81,8 @@
 
             formData.append('nombre', this.form.nombre)
             formData.append('descripcion', this.form.descripcion)
+            formData.append('usuario', localStorage.getItem('id_usuario'))
+
             //formData.append('pruebas', this.form.pruebas)
             
             for (var i=0; i<this.form.pruebas.length; i++) {
