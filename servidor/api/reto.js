@@ -344,4 +344,36 @@ function updateReto (reto) {
     })
 }
 
+function addResuelto (reto) {
+
+    return new Promise((resolve, reject)=>{
+        // buscamos si existe el reto a insertar
+        knex.select().from('reto_resuelto').where( {"reto": reto.id, "usuario": reto.usuario})
+            .then(function(datos){
+                console.log(datos)
+                if (datos.length>1) {
+                    resolve({data:datos})
+                }
+                else {
+                    console.log("entro")
+                    knex('reto_resuelto').insert({
+                        reto: reto.id,
+                        usuario: reto.usuario
+                    })
+                    .then(function(insertado) {
+                        if (insertado.length<1) {
+                            reject({err:500});            
+                        }
+                        else {
+                            reto.id = insertado[0];
+                            resolve({data:reto});
+                        }
+                    }) 
+                }
+
+            })
+    })         
+        
+}
 exports.obtenerSoluciones = obtenerSoluciones;
+exports.addResuelto = addResuelto;

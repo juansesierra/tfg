@@ -43,6 +43,17 @@ app.post("/ejecutar", function(req, resp){
         
                 if (comparaOk) {
                     responseObj.data = "Ejecución correcta";
+                    let reto = {
+                        id: req.body.idReto,
+                        usuario: req.body.idUsuario
+                    }
+
+
+                    ApiR.addResuelto(reto).then(salida => {
+                        // añadimos a retos resueltos por el usuario
+                        console.log("aaa")
+                        console.log(salida)
+                    })
                 }
                 else {
                     responseObj.data = "Ejecución incorrecta";
