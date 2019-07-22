@@ -2,6 +2,7 @@ express = require('express')
 Promise = require('bluebird')
 bodyParser = require('body-parser')
 fs = require('fs');
+bcrypt = require('bcrypt');
 var cors = require('cors')
 
 // variables globales

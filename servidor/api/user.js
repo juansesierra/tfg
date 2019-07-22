@@ -155,15 +155,18 @@ function addUser (usuario, callback) {
         //Si no existe lo insertamos 
         else {
             if (usuario.login && usuario.password && usuario.email) {
-                knex('Usuario').insert({login: usuario.login, password: usuario.password, email: usuario.email})
-                .then(function(insertado) {
-                    if (insertado.length<1) {
-                        callback({err:500});            
-                    }
-                    else {
-                        callback({data:insertado});
-                    }
-                })  
+                // ciframos la contraseña
+                bcrypt.hash(usuario.password, 10).then(function(hash) {
+                    knex('Usuario').insert({login: usuario.login, password: hash, email: usuario.email})
+                    .then(function(insertado) {
+                        if (insertado.length<1) {
+                            callback({err:500});            
+                        }
+                        else {
+                            callback({data:insertado});
+                        }
+                    })  
+                });
             }
             else {
                 callback({
