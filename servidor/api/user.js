@@ -109,17 +109,25 @@ app.post('/login',function(req,resp){
 
 function login (credenciales,callback){
     if(credenciales.login && credenciales.password){
-        knex.select().from("Usuario").where({login:credenciales.login, password:credenciales.password})
+        knex.select().from("Usuario").where({login:credenciales.login})
         .then(function(datos){
             if(datos.length<1) {
                 callback({err:404});
             }
 
             else {
-                callback({data:datos})
+                bcrypt.compare(credenciales.password, datos[0].password).then(function(res) {
+                    if (res) {
+                        callback({data:datos})
+                    }
+                    else {
+                        callback({err:404});
+                    }
+                });
             }
 
         });
+
     }else{
         callback({err:400})
     }
