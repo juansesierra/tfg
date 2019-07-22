@@ -43,6 +43,16 @@ export class Servicio_API {
         })
     }
 
+    getMisRetos(formData) {
+        var url = "http://localhost:3000/misRetos";
+        return fetch (url, {
+            method: 'POST',
+            body: formData
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
+
     getReto(id) {
         var url = "http://localhost:3000/retos/" + id;
         return fetch (url, {

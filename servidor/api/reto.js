@@ -65,12 +65,12 @@ function listarRetos() {
 }
 
 // retodo con todos las retos
-app.get("/misRetos", function(pet, resp){
+app.post("/misRetos", function(pet, resp){
     var respuesta = {
         data : 0
     }
-    let usuario = parseInt (pet.query.usuario)
-    
+    let usuario = parseInt (pet.body.usuario)
+
     listarMisRetos(usuario).then(datos => {
         if (datos.err) {
             resp.status(datos.err);
