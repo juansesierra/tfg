@@ -36,6 +36,7 @@ app.post("/ejecutar", function(req, resp){
                     
                     responseObj.entrada = fs.readFileSync(soluciones[i].entrada).toString();
                     responseObj.salida_esperada = fs.readFileSync(soluciones[i].salida).toString();
+                    console.log("salida esperada: " + soluciones[i].salida)
 
                     comparaOk = compararSalidas(fichero_salida, soluciones[i].salida)        
                 }

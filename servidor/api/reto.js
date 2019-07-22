@@ -40,7 +40,7 @@ app.get("/retos", function(pet, resp){
         data : 0
     }
 
-    retorRetos().then(datos => {
+    listarRetos().then(datos => {
         if (datos.err) {
             resp.status(datos.err);
             resp.end();
@@ -53,7 +53,7 @@ app.get("/retos", function(pet, resp){
 
 })
  
-function retorRetos() {
+function listarRetos() {
     
     return new Promise((resolve, reject)=>{
         knex.select().from('reto').then(datos => {
