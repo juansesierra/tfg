@@ -53,6 +53,16 @@ export class Servicio_API {
         })
     }
 
+    getRetosResueltos(formData) {
+        var url = "http://localhost:3000/retosResueltos";
+        return fetch (url, {
+            method: 'POST',
+            body: formData
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
+
     getReto(id) {
         var url = "http://localhost:3000/retos/" + id;
         return fetch (url, {
