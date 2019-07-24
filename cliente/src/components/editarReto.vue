@@ -1,57 +1,65 @@
 <template>
-    <div id="addReto_container"> 
-        <h1> Editar Reto </h1>
-        <b-form @submit="onSubmit" v-if="show">
-        <b-form-group id="input-group-1" label="Nombre:" label-for="input-1" >
-            <b-form-input
-                id="input-1"
-                v-model="form.nombre"
-                required
-                placeholder="Introduce el nombre del reto"
-            ></b-form-input>
-        </b-form-group>
+    <div>
+        <navbar></navbar>
+        <div id="addReto_container"> 
+            <h1> Editar Reto </h1>
+            <b-form @submit="onSubmit" v-if="show">
+            <b-form-group id="input-group-1" label="Nombre:" label-for="input-1" >
+                <b-form-input
+                    id="input-1"
+                    v-model="form.nombre"
+                    required
+                    placeholder="Introduce el nombre del reto"
+                ></b-form-input>
+            </b-form-group>
 
-        <b-form-group id="input-group-2" label="Descripcion:" label-for="input-2">
-            <b-form-textarea
-                id="input-2"
-                v-model="form.descripcion"
-                required
-                placeholder="Introduce la  descripcion del reto"
-                rows="3"
-                max-rows="6"
-            ></b-form-textarea>
-        </b-form-group>
+            <b-form-group id="input-group-2" label="Descripcion:" label-for="input-2">
+                <b-form-textarea
+                    id="input-2"
+                    v-model="form.descripcion"
+                    required
+                    placeholder="Introduce la  descripcion del reto"
+                    rows="3"
+                    max-rows="6"
+                ></b-form-textarea>
+            </b-form-group>
 
-        
+            
 
-        <b-button type="submit" variant="primary">Guardar</b-button>
-        <b-button type="submit" @click.prevent="addPrueba" variant="info">Añadir entrada/salida</b-button>
-        </b-form>
+            <b-button type="submit" variant="primary">Guardar</b-button>
+            <b-button type="submit" @click.prevent="addPrueba" variant="info">Añadir entrada/salida</b-button>
+            </b-form>
+        </div>
     </div>
+
     
 </template>
 
 
 <script>
     import {Servicio_API} from './../API.js';
+    import Navbar from './navbar.vue';
 
 
     var servicio_API = new Servicio_API();
 
     export default {
+        components: {
+            Navbar
+        },
         data() {
-        return {
-            form: {
-            nombre: '',
-            descripcion: '',
-            pruebas: [{
-                id: 0,
-                f_entrada: null,
-                f_salida: null
-            }]
-            },
-            show: true
-        }
+            return {
+                form: {
+                nombre: '',
+                descripcion: '',
+                pruebas: [{
+                    id: 0,
+                    f_entrada: null,
+                    f_salida: null
+                }]
+                },
+                show: true
+            }
         },
         created() {
             servicio_API.getReto(this.$route.params.id).then(respuesta => {

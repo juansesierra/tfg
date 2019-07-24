@@ -6,7 +6,7 @@
 
                 <b-card-text>{{reto.descripcion}}</b-card-text>
                 
-                <a :href="'/resolver/' + reto.id" class="card-link">Resolver</a>
+                <a :href="'/editarReto/' + reto.id" class="card-link">Editar Reto</a>
             </b-card>
         </div>
     </div>
