@@ -7,8 +7,15 @@ app.get("/retos/:id", function(pet, resp){
     
     obtenerReto(idReto)
     .then(datos => {
-        
-        resp.send(datos);
+        let soluciones = leerFicheroSoluciones(datos.data)
+        var reto = {
+            id: datos.data[0].id,
+            nombre: datos.data[0].nombre,
+            descripcion: datos.data[0].descripcion,
+            soluciones: soluciones
+        }
+        console.log(reto)
+        resp.send(reto);
         
     })
     .catch(error => {
@@ -21,18 +28,33 @@ app.get("/retos/:id", function(pet, resp){
 function obtenerReto(id) {
     
     return new Promise((resolve, reject)=>{
-        knex.select().from('reto').where("id",id)
-        .then(function(datos){
-            if(datos.length<1) {
-                reject({err:404});
-            }
-
-            else {
-                resolve({data:datos[0]})
-            }
+        knex('reto')
+        .join('solucion_reto', 'reto.id', 'solucion_reto.reto').where('solucion_reto.reto', id)
+        .select('reto.id as id',
+            'reto.nombre as nombre', 
+            'reto.descripcion as descripcion',
+            'solucion_reto.entrada as entrada',
+            'solucion_reto.salida as salida'
+         ).then(datos => {
+            resolve({
+                data: datos
+            })  
         })
     })
-}  
+}
+
+function leerFicheroSoluciones(reto) {
+    let resp = [];
+    
+    for (let solucion of reto) {
+        resp.push ( {
+            entrada : fs.readFileSync(solucion.entrada).toString(),
+            salida : fs.readFileSync(solucion.salida).toString()
+        })
+    }
+
+    return resp;
+}
 
 // listado con todos las retos
 app.get("/retos", function(pet, resp){
