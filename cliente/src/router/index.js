@@ -35,27 +35,67 @@ export default new Router({
     {
       path: '/addReto',
       name: 'addReto',
-      component: addReto
+      component: addReto,
+      beforeEnter: (to, from, next) => { 
+        if (!localStorage.token) {
+          next('login');
+        }
+        else {
+          next();  
+        }
+      } 
     },
     {
       path: '/misRetos',
       name: 'misRetos',
-      component: misRetos
+      component: misRetos,
+      beforeEnter: (to, from, next) => { 
+        if (!localStorage.token) {
+          next('login');
+        }
+        else {
+          next();  
+        }
+      } 
     },
     {
       path: '/retosResueltos',
       name: 'retosResueltos',
-      component: retosResueltos
+      component: retosResueltos,
+      beforeEnter: (to, from, next) => { 
+        if (!localStorage.token) {
+          next('login');
+        }
+        else {
+          next();  
+        }
+      } 
     },
     {
       path: '/resolver/:id',
       name: 'Resolver',
-      component: Resolver
+      component: Resolver,
+      beforeEnter: (to, from, next) => { 
+        if (!localStorage.token) {
+          next('login');
+        }
+        else {
+          next();  
+        }
+      } 
     },
     {
       path: '/editarReto/:id',
       name: 'editarReto',
-      component: editarReto
+      component: editarReto,
+      beforeEnter: (to, from, next) => { 
+        if (!localStorage.token) {
+          next('login');
+        }
+        else {
+          next();  
+        }
+      } 
     },
   ]
 })
