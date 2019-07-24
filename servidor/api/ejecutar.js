@@ -29,13 +29,20 @@ app.post("/ejecutar", function(req, resp){
             Promise.all(ejecuciones).then(salidas => {
                 
                 var comparaOk = true;
-                
+                responseObj.ejecuciones = [];
+
                 for (var i = 0; i<salidas.length && comparaOk; i++) {
                     respuestaEjecucion = salidas[i].salida;
                     var fichero_salida = "salida_" + i + ".txt";
                     
-                    responseObj.entrada = fs.readFileSync(soluciones[i].entrada).toString();
-                    responseObj.salida_esperada = fs.readFileSync(soluciones[i].salida).toString();
+                    ejecucion = {
+                        id: i+1,
+                        entrada : fs.readFileSync(soluciones[i].entrada).toString(),
+                        salida_esperada: fs.readFileSync(soluciones[i].salida).toString(),
+                        salida: respuestaEjecucion
+                    }
+                    responseObj.ejecuciones.push(ejecucion);
+
                     console.log("salida esperada: " + soluciones[i].salida)
 
                     comparaOk = compararSalidas(fichero_salida, soluciones[i].salida)        
@@ -59,7 +66,6 @@ app.post("/ejecutar", function(req, resp){
                     responseObj.data = "Ejecución incorrecta";
                 }
 
-                responseObj.salida = respuestaEjecucion;
 
                 resp.send(responseObj);
             })
