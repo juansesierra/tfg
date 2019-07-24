@@ -53,10 +53,12 @@ html, body{
 
 #respuesta-container {
   height: 35% !important;
+  overflow: auto;
 }
 
 #salida-container {
   height: 26% !important;
+  overflow: auto;
 }
 
 .cuadrados {

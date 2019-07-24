@@ -10,9 +10,10 @@
             </div>
             <div id="salida-container" class="cuadrados salidas">
                     <span id="enunciado-label">Resultado de la ejecución</span>
-                    <span id="salida"> 
-                        <br><br>Entrada: {{this.entrada}}
-                        <br>Salida: {{this.salida}}
+                    <span id="salida" v-for="ejecucion in ejecuciones" :key="ejecucion.id"> 
+                        <br><br> Test {{ejecucion.id}}
+                        <br>Entrada: {{ejecucion.entrada}}
+                        <br>Salida: {{ejecucion.salida}}
                     </span>
             </div>   
             
@@ -33,7 +34,7 @@
                 </div>
 
                 <div id="respuesta-container" class="cuadrados salidas">
-                    <span id="enunciado-label">Respuesta<br></span>
+                    <span id="enunciado-label">Respuesta<br><br></span>
                     <span id="respuesta" :style="'color:' + this.color"> 
 
                     </span>
@@ -63,7 +64,7 @@ export default {
         descripcion: '',
         entrada: '',
         salida_esperada: '',
-        salida: '',
+        ejecuciones: [],
         mostrar: false,
         color: 'black'
     }
@@ -84,13 +85,14 @@ export default {
             lenguaje : this.lenguaje,
             codigo : this.codigo,
             idReto : this.$route.params.id,
-            usuario : "juan",
+            usuario : localStorage.getItem('usuario'),
             idUsuario: localStorage.getItem('id_usuario')
         }
 
         this.mostrar = false;
         this.color = 'black';
-        this.entrada =  this.salida = this.salida_esperada = '';
+        this.salida_esperada = '';
+        this.ejecuciones = [];
         document.getElementById('respuesta').innerHTML = '';
 
     
@@ -115,14 +117,12 @@ export default {
                 document.getElementById('respuesta').innerHTML = respuesta.error;
             }
 
-            if (respuesta.entrada) {
-                this.entrada = respuesta.entrada;
-            }
+            this.ejecuciones = respuesta.ejecuciones;
+            var ultima = this.ejecuciones[this.ejecuciones.length-1];
 
-            if (respuesta.salida) {
-                this.salida = respuesta.salida;
-            }
-            
+            this.entrada = ultima.entrada;
+            this.salida_esperada = ultima.salida_esperada;
+        
         });                
           
       }
