@@ -1,5 +1,6 @@
 <template>
     <div>
+        <navbar></navbar>
         <div v-for="reto in retos" :key="reto.id">
             <b-card :title="reto.nombre">
 
@@ -13,10 +14,15 @@
 
 <script>
     import {Servicio_API} from './../API.js';
+    import Navbar from './navbar.vue';
+
 
     var servicio_API = new Servicio_API();
 
     export default {
+        components: {
+            Navbar
+        },
         data() {
             return {
                 retos: []

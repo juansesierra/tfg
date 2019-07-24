@@ -1,11 +1,12 @@
 <template>
     <div>
+        <navbar></navbar>
         <div v-for="reto in retos" :key="reto.id">
             <b-card :title="reto.nombre">
 
                 <b-card-text>{{reto.descripcion}}</b-card-text>
                 
-                <a :href="'/resolver/' + reto.id" class="card-link">Resolver</a>
+                <a :href="'/editarReto/' + reto.id" class="card-link">Editar Reto</a>
             </b-card>
         </div>
     </div>
@@ -13,10 +14,14 @@
 
 <script>
     import {Servicio_API} from './../API.js';
+    import Navbar from './navbar.vue';
 
     var servicio_API = new Servicio_API();
 
     export default {
+        components: {
+            Navbar
+        },
         data() {
             return {
                 retos: []
