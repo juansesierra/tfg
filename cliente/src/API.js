@@ -72,6 +72,16 @@ export class Servicio_API {
         })
     }
 
+    deleteSolucion(formData) {
+        var url = "http://localhost:3000/solucion";
+        return fetch (url, {
+            method: 'DELETE',
+            body: formData
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
+
     // Registrar un usuario
     addUser(user) {
         var url = "http://localhost:3000/users";

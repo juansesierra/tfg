@@ -458,5 +458,48 @@ function addResuelto (reto) {
     })         
         
 }
+
+app.delete('/solucion', function (req, resp) {
+    let solucion = req.body;
+    var responseObj = {};
+    
+    try {
+        deleteSolucion(solucion,function(borrado){
+			if(borrado.err){
+				resp.status(borrado.err)
+				resp.end()
+			}else{
+				responseObj.data = "Test eliminado con éxito!";
+				resp.send(responseObj)
+			}
+		})
+    } catch(err) {
+        resp.status(500)
+		resp.send({error:err.message})
+    }
+})
+
+function deleteSolucion (solucion, callback) {
+    // buscamos si existe la solucion a eliminar
+    knex('solucion_reto').where('id', solucion.id).then (function (aux) {
+        
+        if(!aux[0]) {
+            callback({err:404});
+        }
+        //Si existe lo borramos
+        else {
+            knex('solucion_reto').where('id',solucion.id).del()
+            .then(function(borrado) {
+                if (borrado<1) {
+                    callback({err:500});            
+                }
+                else {
+                    callback({data:borrado});
+                }
+            })  
+        }
+    }) 
+             
+}
 exports.obtenerSoluciones = obtenerSoluciones;
 exports.addResuelto = addResuelto;

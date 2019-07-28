@@ -18,17 +18,17 @@
             </ul>
         </div>
         <div class="navbar-collapse collapse order-3 dual-collapse2">
-        <ul class="navbar-nav ml-auto">
-             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Cuenta
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="left:-69%">
-                    <a class="dropdown-item" v-on:click="cerrarSesion">Cerrar sesión</a>
-                </div>
-            </li>
-        </ul>
-    </div>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cuenta
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="left:-69%">
+                        <a class="dropdown-item" v-on:click="cerrarSesion">Cerrar sesión</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </nav>
 </template>
 
