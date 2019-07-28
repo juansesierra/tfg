@@ -14,8 +14,7 @@ app.get("/retos/:id", function(pet, resp){
             descripcion: datos.data[0].descripcion,
             soluciones: soluciones
         }
-        console.log(reto)
-        resp.send(reto);
+        resp.send({data:reto});
         
     })
     .catch(error => {
@@ -34,7 +33,8 @@ function obtenerReto(id) {
             'reto.nombre as nombre', 
             'reto.descripcion as descripcion',
             'solucion_reto.entrada as entrada',
-            'solucion_reto.salida as salida'
+            'solucion_reto.salida as salida',
+            'solucion_reto.id as id_solucion'
          ).then(datos => {
             resolve({
                 data: datos
@@ -45,12 +45,17 @@ function obtenerReto(id) {
 
 function leerFicheroSoluciones(reto) {
     let resp = [];
+    let contador = 1;
     
     for (let solucion of reto) {
         resp.push ( {
+            numero: contador,
+            id: solucion.id_solucion,
             entrada : fs.readFileSync(solucion.entrada).toString(),
             salida : fs.readFileSync(solucion.salida).toString()
         })
+
+        contador++;
     }
 
     return resp;
@@ -224,23 +229,7 @@ function subirArchivos (req, resp) {
         exec.exec ("mkdir ./retos/" + nombre_reto, function (error) {
             if (error == null) {
 
-                // recorremos el array de archivos
-                for (let archivo in req.files) {
-                    nombre = "./retos/" + nombre_reto + "/" + req.files[archivo].name;
-
-                    let File = req.files[archivo];
-
-                    ficheros.push(nombre);
-
-                    // Subimos la entrada al servidor
-                    File.mv(nombre).then( function () {
-                        // Se ha subido correctamente
-                    }).catch(function (err){
-                        resp.status(500)
-                        resp.send({error: "Error al subir los ficheros de entrada/salida"});
-                    })
-
-                }
+                ficheros = subirArchivosAux(req, resp);
                 resolve(ficheros);
 
             }
@@ -251,6 +240,31 @@ function subirArchivos (req, resp) {
             }
         });
     })
+}
+
+function subirArchivosAux(req, resp) {
+    var ficheros = [];
+    nombre_reto = escape(req.body.nombre)
+
+    // recorremos el array de archivos
+    for (let archivo in req.files) {
+        nombre = "./retos/" + nombre_reto + "/" + req.files[archivo].name;
+
+        let File = req.files[archivo];
+
+        ficheros.push(nombre);
+
+        // Subimos la entrada al servidor
+        File.mv(nombre).then( function () {
+            // Se ha subido correctamente
+        }).catch(function (err){
+            resp.status(500)
+            resp.send({error: "Error al subir los ficheros de entrada/salida"});
+        })
+
+    }
+
+    return ficheros;
 }
 
 function crearSoluciones(ficheros) {
@@ -350,13 +364,27 @@ app.put('/retos', function (req, resp) {
     try {
         updateReto(reto).
         then(function(editado){
-			if(editado.err){
-				resp.status(editado.err)
-				resp.end()
-			}else{
-				responseObj.data = "Reto modificado con éxito!";
-				resp.send(responseObj)
-			}
+            if (req.files) {
+                console.log("entro")
+                var ficheros = subirArchivosAux(req, resp)
+
+                var soluciones = crearSoluciones(ficheros);
+            
+                return addSolucion(reto, soluciones)
+            }
+            else {
+                if(editado.err){
+                    resp.status(editado.err)
+                    resp.end()
+                }else{
+                    responseObj.data = "Reto modificado con éxito!";
+                    resp.send(responseObj)
+                }
+            }
+        }).then (response => {
+            resp.status(200); // reto insertado               
+            responseObj.data = "Reto modificado con éxito!";
+            resp.send(responseObj)
         })
         .catch(error => {
             resp.status(error.err);

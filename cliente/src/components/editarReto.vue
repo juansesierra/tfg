@@ -24,6 +24,47 @@
                 ></b-form-textarea>
             </b-form-group>
 
+            <div v-for="prueba in pruebas" :key="prueba.id"> 
+                <h3> Test {{prueba.numero}}</h3>
+                <b-form-group id="input-group-2" label="Entrada:" label-for="input-2">
+                    <b-form-textarea
+                        v-model="prueba.entrada"
+                        disabled
+                        rows="3"
+                        max-rows="6"
+                    ></b-form-textarea>
+                </b-form-group>
+
+                <b-form-group id="input-group-2" label="Salida:" label-for="input-2">
+                    <b-form-textarea
+                        v-model="prueba.salida"
+                        disabled
+                        rows="3"
+                        max-rows="6"
+                    ></b-form-textarea>
+                </b-form-group>
+            </div>
+
+            <div v-for="prueba in form.pruebas_nuevas" :key="prueba.id">
+
+                <b-form-group id="input-group-3" label="Fichero de entrada:" label-for="input-entrada">
+                    <b-form-file
+                        id="input-entrada"
+                        v-model="prueba.f_entrada"
+                        required
+                        placeholder="Selecciona el fichero de entrada"
+                    ></b-form-file>
+                </b-form-group>
+
+                <b-form-group id="input-group-3" label="Fichero de salida:" label-for="input-salida">
+                    <b-form-file
+                        id="input-salida"
+                        v-model="prueba.f_salida"
+                        required
+                        placeholder="Selecciona el fichero de salida"
+                    ></b-form-file>
+                </b-form-group>
+            </div>
             
 
             <b-button type="submit" variant="primary">Guardar</b-button>
@@ -50,14 +91,11 @@
         data() {
             return {
                 form: {
-                nombre: '',
-                descripcion: '',
-                pruebas: [{
-                    id: 0,
-                    f_entrada: null,
-                    f_salida: null
-                }]
+                    nombre: '',
+                    descripcion: '',
+                    pruebas_nuevas: []
                 },
+                pruebas: [],
                 show: true
             }
         },
@@ -67,6 +105,7 @@
                 if (respuesta.data) {
                     this.form.nombre = respuesta.data.nombre;
                     this.form.descripcion = respuesta.data.descripcion;
+                    this.pruebas = respuesta.data.soluciones;
                 }
             
             }); 
@@ -81,18 +120,20 @@
             formData.append('nombre', this.form.nombre)
             formData.append('descripcion', this.form.descripcion)
             
-            /*
-            for (var i=0; i<this.form.pruebas.length; i++) {
-                formData.append('entrada_'+i, this.form.pruebas[i].f_entrada);
-                formData.append('salida_'+i, this.form.pruebas[i].f_salida)
+            
+            for (var i=0; i<this.form.pruebas_nuevas.length; i++) {
+                formData.append('entrada_'+i, this.form.pruebas_nuevas[i].f_entrada);
+                formData.append('salida_'+i, this.form.pruebas_nuevas[i].f_salida)
             }
-            */
+            
             servicio_API.editarReto(formData).then(respuesta => {   
                 // Reto editado con exito             
                 if (respuesta.data) {
                     this.$swal({
                         type: 'success',
                         title: respuesta.data,
+                    }).then(result => {
+                        window.location.replace("/misRetos");
                     })
                 }
                 // Ha habido algún error
@@ -105,13 +146,14 @@
             }); 
         },
         addPrueba : function () {
-            var id = this.form.pruebas.length;
+            var id = this.form.pruebas_nuevas.length;
 
-            this.form.pruebas.push({
+            this.form.pruebas_nuevas.push({
                 id: id,
                 f_entrada: null,
                 f_salida: null
             })
+
         }
         }
     }
