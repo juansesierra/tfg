@@ -105,6 +105,8 @@
 
             formData.append('nombre', this.form.nombre)
             formData.append('descripcion', this.form.descripcion)
+            formData.append('dificultad', this.form.dificultad)
+
             formData.append('usuario', localStorage.getItem('id_usuario'))
 
             //formData.append('pruebas', this.form.pruebas)
@@ -133,7 +135,6 @@
         },
         onReset(evt) {
             evt.preventDefault()
-            console.log(this.form.dificultad)
 
             // Reset our form values
             this.form.nombre = ''

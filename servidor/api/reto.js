@@ -319,7 +319,8 @@ function addReto (reto) {
                 knex('reto').insert({
                     nombre: reto.nombre,
                     descripcion: reto.descripcion,
-                    usuario: reto.usuario
+                    usuario: reto.usuario,
+                    dificultad: reto.dificultad
                 })
                 .then(function(insertado) {
                     if (insertado.length<1) {
