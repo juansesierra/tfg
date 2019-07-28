@@ -23,6 +23,22 @@
                     max-rows="6"
                 ></b-form-textarea>
             </b-form-group>
+            
+            <b-form-group id="input-group-4" label="Dificultad:" label-for="input-4">
+                <p class="clasificacion">
+                    <input id="radio1" type="radio" name="estrellas" value="5" required v-model="form.dificultad"><!--
+                    --><label for="radio1" class="estrellas">★</label><!--
+                    --><input id="radio2" type="radio" name="estrellas" value="4" v-model="form.dificultad"><!--
+                    --><label for="radio2" class="estrellas">★</label><!--
+                    --><input id="radio3" type="radio" name="estrellas" value="3" v-model="form.dificultad"><!--
+                    --><label for="radio3" class="estrellas">★</label><!--
+                    --><input id="radio4" type="radio" name="estrellas" value="2" v-model="form.dificultad"><!--
+                    --><label for="radio4" class="estrellas">★</label><!--
+                    --><input id="radio5" type="radio" name="estrellas" value="1" v-model="form.dificultad"><!--
+                    --><label for="radio5" class="estrellas">★</label>
+                </p>
+            </b-form-group>
+
 
             <div v-for="prueba in form.pruebas" :key="prueba.id">
 
@@ -71,6 +87,7 @@
                 form: {
                 nombre: '',
                 descripcion: '',
+                dificultad: null,
                 pruebas: [{
                     id: 0,
                     f_entrada: null,
@@ -116,9 +133,12 @@
         },
         onReset(evt) {
             evt.preventDefault()
+            console.log(this.form.dificultad)
+
             // Reset our form values
             this.form.nombre = ''
             this.form.descripcion = ''
+            this.form.dificultad = null
             this.form.pruebas = [{
                 id: 0,
                 f_entrada: null,
