@@ -52,14 +52,13 @@ app.post("/ejecutar", function(req, resp){
                     responseObj.data = "Ejecución correcta";
                     let reto = {
                         id: req.body.idReto,
-                        usuario: req.body.idUsuario
+                        usuario: req.body.idUsuario,
+                        fichero: codigo
                     }
 
 
                     ApiR.addResuelto(reto).then(salida => {
                         // añadimos a retos resueltos por el usuario
-                        console.log("aaa")
-                        console.log(salida)
                     })
                 }
                 else {

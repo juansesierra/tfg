@@ -437,15 +437,15 @@ function addResuelto (reto) {
         // buscamos si existe el reto a insertar
         knex.select().from('reto_resuelto').where( {"reto": reto.id, "usuario": reto.usuario})
             .then(function(datos){
-                console.log(datos)
-                if (datos.length>1) {
+                if (datos.length>=1) {
                     resolve({data:datos})
                 }
                 else {
                     console.log("entro")
                     knex('reto_resuelto').insert({
                         reto: reto.id,
-                        usuario: reto.usuario
+                        usuario: reto.usuario,
+                        fichero: reto.fichero
                     })
                     .then(function(insertado) {
                         if (insertado.length<1) {
