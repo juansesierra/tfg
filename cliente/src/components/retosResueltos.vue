@@ -34,7 +34,7 @@
 
             formData.append('usuario', localStorage.getItem('id_usuario'))
 
-            servicio_API.getMisRetos(formData).then(respuesta => {   
+            servicio_API.getRetosResueltos(formData).then(respuesta => {   
                 console.log(respuesta)
                 if (respuesta.data) {
                     this.retos = respuesta.data;

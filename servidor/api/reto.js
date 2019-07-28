@@ -7,8 +7,14 @@ app.get("/retos/:id", function(pet, resp){
     
     obtenerReto(idReto)
     .then(datos => {
-        
-        resp.send(datos);
+        let soluciones = leerFicheroSoluciones(datos.data)
+        var reto = {
+            id: datos.data[0].id,
+            nombre: datos.data[0].nombre,
+            descripcion: datos.data[0].descripcion,
+            soluciones: soluciones
+        }
+        resp.send({data:reto});
         
     })
     .catch(error => {
@@ -21,18 +27,39 @@ app.get("/retos/:id", function(pet, resp){
 function obtenerReto(id) {
     
     return new Promise((resolve, reject)=>{
-        knex.select().from('reto').where("id",id)
-        .then(function(datos){
-            if(datos.length<1) {
-                reject({err:404});
-            }
-
-            else {
-                resolve({data:datos[0]})
-            }
+        knex('reto')
+        .join('solucion_reto', 'reto.id', 'solucion_reto.reto').where('solucion_reto.reto', id)
+        .select('reto.id as id',
+            'reto.nombre as nombre', 
+            'reto.descripcion as descripcion',
+            'solucion_reto.entrada as entrada',
+            'solucion_reto.salida as salida',
+            'solucion_reto.id as id_solucion'
+         ).then(datos => {
+            resolve({
+                data: datos
+            })  
         })
     })
-}  
+}
+
+function leerFicheroSoluciones(reto) {
+    let resp = [];
+    let contador = 1;
+    
+    for (let solucion of reto) {
+        resp.push ( {
+            numero: contador,
+            id: solucion.id_solucion,
+            entrada : fs.readFileSync(solucion.entrada).toString(),
+            salida : fs.readFileSync(solucion.salida).toString()
+        })
+
+        contador++;
+    }
+
+    return resp;
+}
 
 // listado con todos las retos
 app.get("/retos", function(pet, resp){
@@ -202,23 +229,7 @@ function subirArchivos (req, resp) {
         exec.exec ("mkdir ./retos/" + nombre_reto, function (error) {
             if (error == null) {
 
-                // recorremos el array de archivos
-                for (let archivo in req.files) {
-                    nombre = "./retos/" + nombre_reto + "/" + req.files[archivo].name;
-
-                    let File = req.files[archivo];
-
-                    ficheros.push(nombre);
-
-                    // Subimos la entrada al servidor
-                    File.mv(nombre).then( function () {
-                        // Se ha subido correctamente
-                    }).catch(function (err){
-                        resp.status(500)
-                        resp.send({error: "Error al subir los ficheros de entrada/salida"});
-                    })
-
-                }
+                ficheros = subirArchivosAux(req, resp);
                 resolve(ficheros);
 
             }
@@ -229,6 +240,31 @@ function subirArchivos (req, resp) {
             }
         });
     })
+}
+
+function subirArchivosAux(req, resp) {
+    var ficheros = [];
+    nombre_reto = escape(req.body.nombre)
+
+    // recorremos el array de archivos
+    for (let archivo in req.files) {
+        nombre = "./retos/" + nombre_reto + "/" + req.files[archivo].name;
+
+        let File = req.files[archivo];
+
+        ficheros.push(nombre);
+
+        // Subimos la entrada al servidor
+        File.mv(nombre).then( function () {
+            // Se ha subido correctamente
+        }).catch(function (err){
+            resp.status(500)
+            resp.send({error: "Error al subir los ficheros de entrada/salida"});
+        })
+
+    }
+
+    return ficheros;
 }
 
 function crearSoluciones(ficheros) {
@@ -328,13 +364,27 @@ app.put('/retos', function (req, resp) {
     try {
         updateReto(reto).
         then(function(editado){
-			if(editado.err){
-				resp.status(editado.err)
-				resp.end()
-			}else{
-				responseObj.data = "Reto modificado con éxito!";
-				resp.send(responseObj)
-			}
+            if (req.files) {
+                console.log("entro")
+                var ficheros = subirArchivosAux(req, resp)
+
+                var soluciones = crearSoluciones(ficheros);
+            
+                return addSolucion(reto, soluciones)
+            }
+            else {
+                if(editado.err){
+                    resp.status(editado.err)
+                    resp.end()
+                }else{
+                    responseObj.data = "Reto modificado con éxito!";
+                    resp.send(responseObj)
+                }
+            }
+        }).then (response => {
+            resp.status(200); // reto insertado               
+            responseObj.data = "Reto modificado con éxito!";
+            resp.send(responseObj)
         })
         .catch(error => {
             resp.status(error.err);
@@ -407,6 +457,49 @@ function addResuelto (reto) {
             })
     })         
         
+}
+
+app.delete('/solucion', function (req, resp) {
+    let solucion = req.body;
+    var responseObj = {};
+    
+    try {
+        deleteSolucion(solucion,function(borrado){
+			if(borrado.err){
+				resp.status(borrado.err)
+				resp.end()
+			}else{
+				responseObj.data = "Test eliminado con éxito!";
+				resp.send(responseObj)
+			}
+		})
+    } catch(err) {
+        resp.status(500)
+		resp.send({error:err.message})
+    }
+})
+
+function deleteSolucion (solucion, callback) {
+    // buscamos si existe la solucion a eliminar
+    knex('solucion_reto').where('id', solucion.id).then (function (aux) {
+        
+        if(!aux[0]) {
+            callback({err:404});
+        }
+        //Si existe lo borramos
+        else {
+            knex('solucion_reto').where('id',solucion.id).del()
+            .then(function(borrado) {
+                if (borrado<1) {
+                    callback({err:500});            
+                }
+                else {
+                    callback({data:borrado});
+                }
+            })  
+        }
+    }) 
+             
 }
 exports.obtenerSoluciones = obtenerSoluciones;
 exports.addResuelto = addResuelto;

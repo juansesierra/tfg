@@ -84,4 +84,14 @@ html, body{
 #addReto_container {
   padding: 5% 20%;
 }
+
+/* Editar retos */
+
+.titulo-test {
+  font-size: 1.5rem;
+}
+
+.navbar-test {
+  margin-bottom: 10px;
+}
 </style>
