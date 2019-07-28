@@ -85,6 +85,29 @@ html, body{
   padding: 5% 20%;
 }
 
+input[type="radio"] {
+  display: none;
+}
+
+.estrellas {
+  color: grey;
+  font-size: 1.5rem;
+}
+
+.clasificacion {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+}
+
+.estrellas:hover,
+.estrellas:hover ~ label {
+  color: orange;
+}
+
+input[type="radio"]:checked ~ label {
+  color: orange;
+}
+
 /* Editar retos */
 
 .titulo-test {

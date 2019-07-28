@@ -24,6 +24,21 @@
                 ></b-form-textarea>
             </b-form-group>
 
+            <b-form-group id="input-group-4" label="Dificultad:" label-for="input-4">
+                <p class="clasificacion">
+                    <input id="radio1" type="radio" name="estrellas" value="5" required v-model="form.dificultad"><!--
+                    --><label for="radio1" class="estrellas">★</label><!--
+                    --><input id="radio2" type="radio" name="estrellas" value="4" v-model="form.dificultad"><!--
+                    --><label for="radio2" class="estrellas">★</label><!--
+                    --><input id="radio3" type="radio" name="estrellas" value="3" v-model="form.dificultad"><!--
+                    --><label for="radio3" class="estrellas">★</label><!--
+                    --><input id="radio4" type="radio" name="estrellas" value="2" v-model="form.dificultad"><!--
+                    --><label for="radio4" class="estrellas">★</label><!--
+                    --><input id="radio5" type="radio" name="estrellas" value="1" v-model="form.dificultad"><!--
+                    --><label for="radio5" class="estrellas">★</label>
+                </p>
+            </b-form-group>
+
             <div v-for="prueba in pruebas" :key="prueba.id"> 
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-test">
                     <h1 class="navbar-brand titulo-test">Test {{prueba.numero}}</h1>
@@ -100,6 +115,7 @@
                 form: {
                     nombre: '',
                     descripcion: '',
+                    dificultad: null,
                     pruebas_nuevas: []
                 },
                 pruebas: [],
@@ -112,6 +128,7 @@
                 if (respuesta.data) {
                     this.form.nombre = respuesta.data.nombre;
                     this.form.descripcion = respuesta.data.descripcion;
+                    this.form.dificultad = respuesta.data.dificultad;
                     this.pruebas = respuesta.data.soluciones;
                 }
             
@@ -126,6 +143,7 @@
                 formData.append('id', this.$route.params.id)
                 formData.append('nombre', this.form.nombre)
                 formData.append('descripcion', this.form.descripcion)
+                formData.append('dificultad', this.form.dificultad)
                 
                 
                 for (var i=0; i<this.form.pruebas_nuevas.length; i++) {

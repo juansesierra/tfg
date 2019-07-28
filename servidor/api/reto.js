@@ -12,6 +12,7 @@ app.get("/retos/:id", function(pet, resp){
             id: datos.data[0].id,
             nombre: datos.data[0].nombre,
             descripcion: datos.data[0].descripcion,
+            dificultad: datos.data[0].dificultad,
             soluciones: soluciones
         }
         resp.send({data:reto});
@@ -32,6 +33,7 @@ function obtenerReto(id) {
         .select('reto.id as id',
             'reto.nombre as nombre', 
             'reto.descripcion as descripcion',
+            'reto.dificultad as dificultad',
             'solucion_reto.entrada as entrada',
             'solucion_reto.salida as salida',
             'solucion_reto.id as id_solucion'
@@ -319,7 +321,8 @@ function addReto (reto) {
                 knex('reto').insert({
                     nombre: reto.nombre,
                     descripcion: reto.descripcion,
-                    usuario: reto.usuario
+                    usuario: reto.usuario,
+                    dificultad: reto.dificultad
                 })
                 .then(function(insertado) {
                     if (insertado.length<1) {
@@ -410,7 +413,8 @@ function updateReto (reto) {
                 console.log(reto);
                 knex('reto').where('id',reto.id).update({
                     nombre: reto.nombre,
-                    descripcion: reto.descripcion
+                    descripcion: reto.descripcion,
+                    dificultad: reto.dificultad
                 })
                 .then(function(editado) {
                     if (editado<1) {
