@@ -77,6 +77,17 @@ export default {
             }
            
         }); 
+
+        var params = {
+            reto:this.$route.params.id, 
+            usuario:localStorage.getItem('id_usuario')
+        };
+
+        servicio_API.getRetoResuelto(params).then(respuesta => {
+            if (respuesta.data) {
+                this.codigo = respuesta.data.fichero;
+            }            
+        })
   },
   methods: {
        enviarSolucion: function () {

@@ -1,1 +1,2 @@
-<? echo 'abeurp';
+<?
+echo 'abeurp';

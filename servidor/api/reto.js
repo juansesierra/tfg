@@ -157,6 +157,59 @@ function listarRetosResueltos(usuario) {
     })
 }
 
+app.get("/retosResueltos", function(pet, resp){
+
+    var respuesta = {
+        data : 0
+    }
+
+    let usuario = parseInt (pet.query.usuario)
+    let reto = parseInt (pet.query.reto)
+    
+
+    obtenerRetoResuelto(usuario, reto).then(datos => {
+        if (datos.err) {
+            resp.status(datos.err);
+            resp.end();
+        }
+        else {
+            datos.data.fichero = fs.readFileSync(datos.data.fichero).toString()
+            respuesta.data = datos.data;
+            resp.send(respuesta);
+        }
+    }).catch(error => {
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
+    })
+
+})
+ 
+function obtenerRetoResuelto(usuario, reto) {
+    
+    return new Promise((resolve, reject)=>{
+        knex.select().from('reto_resuelto').where({
+            'reto' : reto,
+            'usuario' : usuario
+        }).then(datos => {
+            
+            if (datos) {
+                resolve({
+                    data: datos[0]
+                })  
+            }
+            else {
+                reject({err:404});
+            }
+        })
+    })
+}
+
 function findByNombre(nombre) {
 
     return new Promise((resolve, reject)=>{
