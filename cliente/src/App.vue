@@ -123,4 +123,13 @@ input[type="radio"]:checked ~ label {
   margin-bottom: 15px;
 }
 
+/* Listado de retos */
+.card-custom {
+    max-width: 300px;
+}
+
+.card-image {
+  height: 300px;
+}
+
 </style>
