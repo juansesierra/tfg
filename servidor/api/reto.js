@@ -237,8 +237,8 @@ app.post('/retos', function (req, resp) {
     var responseObj = {};
     var reto;
 
-    if (req.files) {
-        
+    if (req.files.foto) {
+        nuevo.foto = "./retos/" + nuevo.nombre + "/" + req.files.foto.name;
     }
     
     try {
@@ -304,11 +304,14 @@ function subirArchivosAux(req, resp) {
     // recorremos el array de archivos
     for (let archivo in req.files) {
         nombre = "./retos/" + nombre_reto + "/" + req.files[archivo].name;
-
+        
         let File = req.files[archivo];
-
-        ficheros.push(nombre);
-
+        
+        // Solo añadimos al array los ficheros que se van a procesar mas tarde
+        if (archivo != 'foto') {
+            ficheros.push(nombre);
+        }
+            
         // Subimos la entrada al servidor
         File.mv(nombre).then( function () {
             // Se ha subido correctamente
@@ -371,12 +374,18 @@ function addReto (reto) {
             }
         }).catch (error => {
             if (reto.descripcion) {
-                knex('reto').insert({
+                var nuevo = {
                     nombre: reto.nombre,
                     descripcion: reto.descripcion,
                     usuario: reto.usuario,
-                    dificultad: reto.dificultad
-                })
+                    dificultad: reto.dificultad,
+                }
+
+                if (reto.foto != null) {
+                    nuevo.foto = reto.foto;
+                }
+
+                knex('reto').insert(nuevo)
                 .then(function(insertado) {
                     if (insertado.length<1) {
                         reject({err:500});            
