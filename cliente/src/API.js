@@ -72,6 +72,18 @@ export class Servicio_API {
         })
     }
 
+    getRetoResuelto(params) {
+        var url = new URL("http://localhost:3000/retosResueltos");
+        url.search = new URLSearchParams(params);
+
+        
+        return fetch (url, {
+            method: 'GET',
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
+
     deleteSolucion(formData) {
         var url = "http://localhost:3000/solucion";
         return fetch (url, {
