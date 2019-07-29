@@ -241,7 +241,7 @@ app.post('/retos', function (req, resp) {
     var reto;
 
     if (req.files.foto) {
-        nuevo.foto = "./retos/" + nuevo.nombre + "/" + req.files.foto.name;
+        nuevo.foto = "./retos/" + escape(nuevo.nombre) + "/" + req.files.foto.name;
     }
     
     try {
@@ -428,12 +428,16 @@ function obtenerSoluciones(reto) {
 app.put('/retos', function (req, resp) {
     let reto = req.body;
     var responseObj = {};
+
+    if (req.files && req.files.foto) {
+        reto.foto = "./retos/" + escape(reto.nombre) + "/" + req.files.foto.name;
+    }
     
     try {
         updateReto(reto).
         then(function(editado){
             if (req.files) {
-                console.log("entro")
+
                 var ficheros = subirArchivosAux(req, resp)
 
                 var soluciones = crearSoluciones(ficheros);
@@ -475,12 +479,20 @@ function updateReto (reto) {
             }
             //Si existe lo editamos
             else {
-                console.log(reto);
-                knex('reto').where('id',reto.id).update({
+                var nuevo = {
                     nombre: reto.nombre,
                     descripcion: reto.descripcion,
-                    dificultad: reto.dificultad
-                })
+                    usuario: reto.usuario,
+                    dificultad: reto.dificultad,
+                }
+
+                if (reto.foto != null) {
+                    nuevo.foto = reto.foto;
+                }
+
+                knex('reto').where('id',reto.id).update(
+                    nuevo
+                )
                 .then(function(editado) {
                     if (editado<1) {
                         reject({err:500});            
@@ -506,7 +518,6 @@ function addResuelto (reto) {
                     resolve({data:datos})
                 }
                 else {
-                    console.log("entro")
                     knex('reto_resuelto').insert({
                         reto: reto.id,
                         usuario: reto.usuario,

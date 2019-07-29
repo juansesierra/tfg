@@ -161,7 +161,10 @@
                 formData.append('nombre', this.form.nombre)
                 formData.append('descripcion', this.form.descripcion)
                 formData.append('dificultad', this.form.dificultad)
-                
+
+                if (this.form.foto != '') {
+                    formData.append('foto', this.form.foto)
+                }   
                 
                 for (var i=0; i<this.form.pruebas_nuevas.length; i++) {
                     formData.append('entrada_'+i, this.form.pruebas_nuevas[i].f_entrada);
