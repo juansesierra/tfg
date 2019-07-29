@@ -13,8 +13,10 @@ app.get("/retos/:id", function(pet, resp){
             nombre: datos.data[0].nombre,
             descripcion: datos.data[0].descripcion,
             dificultad: datos.data[0].dificultad,
+            foto: datos.data[0].foto,
             soluciones: soluciones
         }
+        reto.foto = fs.readFileSync(reto.foto, 'base64');
         resp.send({data:reto});
         
     })
@@ -34,6 +36,7 @@ function obtenerReto(id) {
             'reto.nombre as nombre', 
             'reto.descripcion as descripcion',
             'reto.dificultad as dificultad',
+            'reto.foto as foto',
             'solucion_reto.entrada as entrada',
             'solucion_reto.salida as salida',
             'solucion_reto.id as id_solucion'
@@ -237,8 +240,8 @@ app.post('/retos', function (req, resp) {
     var responseObj = {};
     var reto;
 
-    if (req.files) {
-        
+    if (req.files.foto) {
+        nuevo.foto = "./retos/" + escape(nuevo.nombre) + "/" + req.files.foto.name;
     }
     
     try {
@@ -304,11 +307,14 @@ function subirArchivosAux(req, resp) {
     // recorremos el array de archivos
     for (let archivo in req.files) {
         nombre = "./retos/" + nombre_reto + "/" + req.files[archivo].name;
-
+        
         let File = req.files[archivo];
-
-        ficheros.push(nombre);
-
+        
+        // Solo añadimos al array los ficheros que se van a procesar mas tarde
+        if (archivo != 'foto') {
+            ficheros.push(nombre);
+        }
+            
         // Subimos la entrada al servidor
         File.mv(nombre).then( function () {
             // Se ha subido correctamente
@@ -371,12 +377,18 @@ function addReto (reto) {
             }
         }).catch (error => {
             if (reto.descripcion) {
-                knex('reto').insert({
+                var nuevo = {
                     nombre: reto.nombre,
                     descripcion: reto.descripcion,
                     usuario: reto.usuario,
-                    dificultad: reto.dificultad
-                })
+                    dificultad: reto.dificultad,
+                }
+
+                if (reto.foto != null) {
+                    nuevo.foto = reto.foto;
+                }
+
+                knex('reto').insert(nuevo)
                 .then(function(insertado) {
                     if (insertado.length<1) {
                         reject({err:500});            
@@ -416,12 +428,16 @@ function obtenerSoluciones(reto) {
 app.put('/retos', function (req, resp) {
     let reto = req.body;
     var responseObj = {};
+
+    if (req.files && req.files.foto) {
+        reto.foto = "./retos/" + escape(reto.nombre) + "/" + req.files.foto.name;
+    }
     
     try {
         updateReto(reto).
         then(function(editado){
             if (req.files) {
-                console.log("entro")
+
                 var ficheros = subirArchivosAux(req, resp)
 
                 var soluciones = crearSoluciones(ficheros);
@@ -463,12 +479,20 @@ function updateReto (reto) {
             }
             //Si existe lo editamos
             else {
-                console.log(reto);
-                knex('reto').where('id',reto.id).update({
+                var nuevo = {
                     nombre: reto.nombre,
                     descripcion: reto.descripcion,
-                    dificultad: reto.dificultad
-                })
+                    usuario: reto.usuario,
+                    dificultad: reto.dificultad,
+                }
+
+                if (reto.foto != null) {
+                    nuevo.foto = reto.foto;
+                }
+
+                knex('reto').where('id',reto.id).update(
+                    nuevo
+                )
                 .then(function(editado) {
                     if (editado<1) {
                         reject({err:500});            
@@ -494,7 +518,6 @@ function addResuelto (reto) {
                     resolve({data:datos})
                 }
                 else {
-                    console.log("entro")
                     knex('reto_resuelto').insert({
                         reto: reto.id,
                         usuario: reto.usuario,
