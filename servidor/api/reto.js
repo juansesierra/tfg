@@ -13,8 +13,10 @@ app.get("/retos/:id", function(pet, resp){
             nombre: datos.data[0].nombre,
             descripcion: datos.data[0].descripcion,
             dificultad: datos.data[0].dificultad,
+            foto: datos.data[0].foto,
             soluciones: soluciones
         }
+        reto.foto = fs.readFileSync(reto.foto, 'base64');
         resp.send({data:reto});
         
     })
@@ -34,6 +36,7 @@ function obtenerReto(id) {
             'reto.nombre as nombre', 
             'reto.descripcion as descripcion',
             'reto.dificultad as dificultad',
+            'reto.foto as foto',
             'solucion_reto.entrada as entrada',
             'solucion_reto.salida as salida',
             'solucion_reto.id as id_solucion'

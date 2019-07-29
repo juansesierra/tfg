@@ -24,6 +24,19 @@
                 ></b-form-textarea>
             </b-form-group>
 
+            <label>Foto previa:</label>
+            <div>
+                <img :src="'data:image/jpeg;base64,' + foto_previa" id="foto_previa"/>
+            </div>
+
+            <b-form-group id="input-group" label="Foto del reto:" label-for="input-entrada">
+                <b-form-file
+                    id="input-entrada"
+                    v-model="form.foto"
+                    placeholder="Selecciona una foto para el reto"
+                ></b-form-file>
+            </b-form-group>
+
             <b-form-group id="input-group-4" label="Dificultad:" label-for="input-4">
                 <p class="clasificacion">
                     <input id="radio1" type="radio" name="estrellas" value="5" required v-model="form.dificultad"><!--
@@ -103,7 +116,7 @@
     import {Servicio_API} from './../API.js';
     import Navbar from './navbar.vue';
 
-
+    window.App = { host: '{{ url("/") }}/' };
     var servicio_API = new Servicio_API();
 
     export default {
@@ -116,8 +129,10 @@
                     nombre: '',
                     descripcion: '',
                     dificultad: null,
-                    pruebas_nuevas: []
+                    pruebas_nuevas: [],
+                    foto:'',
                 },
+                foto_previa: '',
                 pruebas: [],
                 show: true
             }
@@ -130,7 +145,9 @@
                     this.form.descripcion = respuesta.data.descripcion;
                     this.form.dificultad = respuesta.data.dificultad;
                     this.pruebas = respuesta.data.soluciones;
+                    this.foto_previa = respuesta.data.foto;
                 }
+                
             
             }); 
         },

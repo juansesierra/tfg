@@ -25,12 +25,12 @@
             </b-form-group>
 
             <b-form-group id="input-group" label="Foto del reto:" label-for="input-entrada">
-                    <b-form-file
-                        id="input-entrada"
-                        v-model="form.foto"
-                        placeholder="Selecciona una foto para el reto"
-                    ></b-form-file>
-                </b-form-group>
+                <b-form-file
+                    id="input-entrada"
+                    v-model="form.foto"
+                    placeholder="Selecciona una foto para el reto"
+                ></b-form-file>
+            </b-form-group>
             
             <b-form-group id="input-group-4" label="Dificultad:" label-for="input-4">
                 <p class="clasificacion">

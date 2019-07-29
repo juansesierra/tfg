@@ -117,4 +117,10 @@ input[type="radio"]:checked ~ label {
 .navbar-test {
   margin-bottom: 10px;
 }
+
+#foto_previa {
+  max-height: 350px;
+  margin-bottom: 15px;
+}
+
 </style>
