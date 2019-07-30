@@ -1,15 +1,15 @@
 <template>
     <div>
         <navbar></navbar>
-        <div v-for="reto in retos" :key="reto.id">
-            <b-card :title="reto.nombre">
-
-                <b-card-text>{{reto.descripcion}}</b-card-text>
-                
-                <a :href="'/editarReto/' + reto.id" class="card-link">Editar Reto</a>
-                <a :href="'/resolver/' + reto.id" class="card-link">Resolver</a>
-
-            </b-card>
+        <div class="row mt-5 justify-content-center">
+            <div class="card card-custom mx-2 mb-3" v-for="reto in retos" :key="reto.id">
+                <img class="card-img-top card-image" :src="'data:image/jpeg;base64,' + reto.foto" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{reto.nombre}}</h5>
+                    <a :href="'/editarReto/' + reto.id" class="card-link">Editar Reto</a>
+                    <a :href="'/resolver/' + reto.id" class="card-link">Resolver</a>
+                </div>
+            </div>
         </div>
     </div>
 </template>

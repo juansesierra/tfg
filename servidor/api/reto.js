@@ -112,6 +112,9 @@ app.post("/misRetos", function(pet, resp){
             resp.end();
         }
         else {
+            for (var i=0; i<datos.data.length; i++) {
+                datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+            }
             respuesta.data = datos.data;
             resp.send(respuesta);
         }
