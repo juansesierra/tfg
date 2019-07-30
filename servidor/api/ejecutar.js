@@ -5,12 +5,12 @@ if(!app)
 
 app.post("/ejecutar", function(req, resp){
     //var token = req.headers.token;
-    let lenguaje = parseInt(req.body.lenguaje); // Lenguaje que va a ejecutar la aplicacion
+    let lenguaje = req.body.lenguaje; // Lenguaje que va a ejecutar la aplicacion
     var responseObj = {};
     var respuestaEjecucion;
 
     let fichero = req.body.codigo;
-    var codigo = req.body.idReto+ "_" + req.body.usuario + ".php";
+    var codigo = req.body.idReto+ "_" + req.body.usuario + "." + lenguaje;
     var soluciones;
 
     // Escribimos el contenido en un nuevo fichero
@@ -22,9 +22,7 @@ app.post("/ejecutar", function(req, resp){
         .then(datos => {
             soluciones = datos.data;
 
-            console.log(soluciones)
-
-            var ejecuciones = ejecutarPHP(codigo, soluciones)
+            var ejecuciones = ejecutar(codigo, soluciones, lenguaje)
             
             Promise.all(ejecuciones).then(salidas => {
                 
@@ -88,19 +86,30 @@ app.post("/ejecutar", function(req, resp){
     
 })
 
-function ejecutarPHP (codigo, entradas) {
+function ejecutar (codigo, entradas, lenguaje) {
     var promesas = [];
     var contador = 0;
+    var cadena;
     
     for (var i=0; i<entradas.length; i++) {
         promesas.push(new Promise((resolve, reject)=>{
             // Recorremos todas las entradas
+            if (lenguaje == 'php') {
+                cadena = 'php:7.2-cli php ';
+            }
+            else if (lenguaje == 'py') {
+                cadena = 'python:3 python '
+            }
+            else {
+                cadena = 'node:8 node ';
+            }
             
             exec.exec('docker run --rm -v "$PWD":/Users/juansebastiansierraangel/tfg '+
-            '-w /Users/juansebastiansierraangel/tfg php:7.2-cli php ' + codigo + " " + entradas[i].entrada,
+            '-w /Users/juansebastiansierraangel/tfg ' + cadena + codigo + " " + entradas[i].entrada,
             // Pasamos los parámetros error, stdout la salida 
             // que mostrara el comando
             function (error, salida) {
+                console.log("entro")
                 // controlamos el error
                 if (error !== null) {
                     console.log("error ejecucion: " + salida)
