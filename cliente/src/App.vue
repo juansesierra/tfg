@@ -132,4 +132,8 @@ input[type="radio"]:checked ~ label {
   height: 300px;
 }
 
+.mt-5 {
+  margin-top: 6rem !important;
+}
+
 </style>
