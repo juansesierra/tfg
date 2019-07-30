@@ -78,6 +78,9 @@ app.get("/retos", function(pet, resp){
             resp.end();
         }
         else {
+            for (var i=0; i<datos.data.length; i++) {
+                datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+            }
             respuesta.data = datos.data;
             resp.send(respuesta);
         }
@@ -109,6 +112,9 @@ app.post("/misRetos", function(pet, resp){
             resp.end();
         }
         else {
+            for (var i=0; i<datos.data.length; i++) {
+                datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+            }
             respuesta.data = datos.data;
             resp.send(respuesta);
         }
@@ -140,6 +146,9 @@ app.post("/retosResueltos", function(pet, resp){
             resp.end();
         }
         else {
+            for (var i=0; i<datos.data.length; i++) {
+                datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+            }
             respuesta.data = datos.data;
             resp.send(respuesta);
         }
@@ -152,7 +161,11 @@ function listarRetosResueltos(usuario) {
     return new Promise((resolve, reject)=>{
         knex('reto')
         .join('reto_resuelto', 'reto.id', 'reto_resuelto.reto')
-        .select('reto.id as id','reto.nombre as nombre', 'reto.descripcion as descripcion').then(datos => {
+        .select('reto.id as id',
+                'reto.nombre as nombre', 
+                'reto.descripcion as descripcion', 
+                'reto.foto as foto'
+        ).then(datos => {
             resolve({
                 data: datos
             })  
