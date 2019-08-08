@@ -24,6 +24,9 @@
                 <div class="form-group col-md-10">
                     <select class="form-control col-md-4" v-model="lenguaje" id="lenguaje">
                         <option value="php"> PHP </option>
+                        <option value="py"> Python </option>
+                        <option value="js"> NodeJS </option>
+
                     </select>
                 </div>
                  <button id="btn-resolver" @click.prevent="enviarSolucion"  class="btn btn-primary"> Resolver </button>
@@ -59,7 +62,7 @@ export default {
   name: 'Resolver',
   data () {
     return {
-        lenguaje: '',
+        lenguaje: 'php',
         codigo: '',
         descripcion: '',
         entrada: '',
@@ -106,7 +109,11 @@ export default {
         this.ejecuciones = [];
         document.getElementById('respuesta').innerHTML = '';
 
-    
+        this.$swal({
+            type: 'info',
+            title: 'Enviando',
+            text: 'Esto puede tardar un momento, por favor no cierre ni recargue la página',
+        })
         
         servicio_API.resolver(solucion).then(respuesta => {
             console.log(respuesta);
