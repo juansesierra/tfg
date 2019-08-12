@@ -109,7 +109,7 @@ app.post('/login',function(req,resp){
 	}
 })
 
-function login (credenciales,callback){
+function login (credenciales,callback) {
     if(credenciales.login && credenciales.password){
         knex.select().from("Usuario").where({login:credenciales.login})
         .then(function(datos){
@@ -123,7 +123,7 @@ function login (credenciales,callback){
                         callback({data:datos})
                     }
                     else {
-                        callback({err:404});
+                        callback({err:403});
                     }
                 });
             }
@@ -260,21 +260,28 @@ function updateUser (usuario, callback) {
         if(!nuevo.data) {
             callback({err:404});
         }
-        //Si existe lo borramos
+        //Si existe lo editamos
         else {
-            knex('Usuario').where('login',usuario.login).update({
-                password: usuario.password,
-                email: usuario.email
+            bcrypt.hash(usuario.password, 10).then(function(hash) {
+                if (usuario.password == '') {
+                    hash = nuevo.data.password; // Si coinciden no actualizamos 
+                }
+                knex('Usuario').where('login',usuario.login).update({
+                    password: hash,
+                    email: usuario.email
+                })
+                .then(function(editado) {
+                    if (editado<1) {
+                        callback({err:500});            
+                    }
+                    else {
+                        callback({data:editado});
+                    }
+                })
             })
-            .then(function(editado) {
-                if (editado<1) {
-                    callback({err:500});            
-                }
-                else {
-                    callback({data:editado});
-                }
-            })  
         }
+            
+        
     })  
              
         
