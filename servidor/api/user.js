@@ -44,7 +44,9 @@ app.get("/users/:id", function(pet, resp){
             resp.end();
         }
         else {
-            resp.send(datos);
+            datos[0].foto = fs.readFileSync(datos[0].foto, 'base64');
+
+            resp.send({data: datos[0]});
         }
     })
 
@@ -107,7 +109,7 @@ app.post('/login',function(req,resp){
 	}
 })
 
-function login (credenciales,callback){
+function login (credenciales,callback) {
     if(credenciales.login && credenciales.password){
         knex.select().from("Usuario").where({login:credenciales.login})
         .then(function(datos){
@@ -121,7 +123,7 @@ function login (credenciales,callback){
                         callback({data:datos})
                     }
                     else {
-                        callback({err:404});
+                        callback({err:403});
                     }
                 });
             }
@@ -235,7 +237,23 @@ function deleteUser (usuario, callback) {
 app.put('/users', function (req, resp) {
     let usuario = req.body;
     var responseObj = {};
+
+
+    if (req.files && req.files.foto) {
     
+        let File = req.files.foto;
+            
+        // Subimos la entrada al servidor
+        File.mv(req.files.foto.name).then( function () {
+            // Se ha subido correctamente
+        }).catch(function (err){
+            resp.status(500)
+            resp.send({error: "Error al subir la foto de perfil"});
+        })
+
+        usuario.foto = './' + req.files.foto.name;
+    }
+
     try {
         updateUser(usuario,function(user){
 			if(user.err){
@@ -258,21 +276,35 @@ function updateUser (usuario, callback) {
         if(!nuevo.data) {
             callback({err:404});
         }
-        //Si existe lo borramos
+        //Si existe lo editamos
         else {
-            knex('Usuario').where('login',usuario.login).update({
-                password: usuario.password,
-                email: usuario.email
+            bcrypt.hash(usuario.password, 10).then(function(hash) {
+                if (usuario.password == '') {
+                    hash = nuevo.data.password; // Si coinciden no actualizamos 
+                }
+                let editar = {
+                    password: hash,
+                    email: usuario.email
+                }
+
+                // Si tiene foto la cambiamos
+                if (usuario.foto) {
+                    editar.foto = usuario.foto
+                }
+
+                knex('Usuario').where('login',usuario.login).update(editar)
+                .then(function(editado) {
+                    if (editado<1) {
+                        callback({err:500});            
+                    }
+                    else {
+                        callback({data:editado});
+                    }
+                })
             })
-            .then(function(editado) {
-                if (editado<1) {
-                    callback({err:500});            
-                }
-                else {
-                    callback({data:editado});
-                }
-            })  
         }
+            
+        
     })  
              
         
