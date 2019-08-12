@@ -237,7 +237,23 @@ function deleteUser (usuario, callback) {
 app.put('/users', function (req, resp) {
     let usuario = req.body;
     var responseObj = {};
+
+
+    if (req.files && req.files.foto) {
     
+        let File = req.files.foto;
+            
+        // Subimos la entrada al servidor
+        File.mv(req.files.foto.name).then( function () {
+            // Se ha subido correctamente
+        }).catch(function (err){
+            resp.status(500)
+            resp.send({error: "Error al subir la foto de perfil"});
+        })
+
+        usuario.foto = './' + req.files.foto.name;
+    }
+
     try {
         updateUser(usuario,function(user){
 			if(user.err){
@@ -266,10 +282,17 @@ function updateUser (usuario, callback) {
                 if (usuario.password == '') {
                     hash = nuevo.data.password; // Si coinciden no actualizamos 
                 }
-                knex('Usuario').where('login',usuario.login).update({
+                let editar = {
                     password: hash,
                     email: usuario.email
-                })
+                }
+
+                // Si tiene foto la cambiamos
+                if (usuario.foto) {
+                    editar.foto = usuario.foto
+                }
+
+                knex('Usuario').where('login',usuario.login).update(editar)
                 .then(function(editado) {
                     if (editado<1) {
                         callback({err:500});            
