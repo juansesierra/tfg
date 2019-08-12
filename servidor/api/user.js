@@ -44,7 +44,9 @@ app.get("/users/:id", function(pet, resp){
             resp.end();
         }
         else {
-            resp.send(datos);
+            datos[0].foto = fs.readFileSync(datos[0].foto, 'base64');
+
+            resp.send({data: datos[0]});
         }
     })
 
