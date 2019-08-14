@@ -24,6 +24,7 @@
                         Cuenta
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="left:-69%">
+                        <a class="dropdown-item" href="/miPerfil">Mi perfil</a>
                         <a class="dropdown-item" v-on:click="cerrarSesion">Cerrar sesión</a>
                     </div>
                 </li>

@@ -8,8 +8,8 @@ import login from '@/components/login'
 import editarReto from '@/components/editarReto'
 import misRetos from '@/components/misRetos'
 import retosResueltos from '@/components/retosResueltos'
-
-
+import miPerfil from '@/components/miPerfil'
+import detallesReto from '@/components/detallesReto'
 
 
 Vue.use(Router)
@@ -88,6 +88,32 @@ export default new Router({
       path: '/editarReto/:id',
       name: 'editarReto',
       component: editarReto,
+      beforeEnter: (to, from, next) => { 
+        if (!localStorage.token) {
+          next('login');
+        }
+        else {
+          next();  
+        }
+      } 
+    },
+    {
+      path: '/miPerfil',
+      name: 'miPerfil',
+      component: miPerfil,
+      beforeEnter: (to, from, next) => { 
+        if (!localStorage.token) {
+          next('login');
+        }
+        else {
+          next();  
+        }
+      } 
+    },
+    {
+      path: '/detallesReto/:id',
+      name: 'detallesReto',
+      component: detallesReto,
       beforeEnter: (to, from, next) => { 
         if (!localStorage.token) {
           next('login');
