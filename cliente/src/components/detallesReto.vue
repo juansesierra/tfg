@@ -105,6 +105,14 @@ export default {
             }
            
         }); 
+
+        servicio_API.getDificultad(this.$route.params.id).then(respuesta => {
+                        
+            if (respuesta.data) {
+                this.dificultad_usuario = respuesta.data;
+            }
+           
+        }); 
     }
 }
 </script>

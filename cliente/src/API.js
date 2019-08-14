@@ -175,5 +175,14 @@ export class Servicio_API {
                 return respuesta.json();
         })
     }
+
+    getDificultad(id) {
+        var url = "http://localhost:3000/dificultad/" + id;
+        return fetch (url, {
+            method: 'GET'
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
 }
 

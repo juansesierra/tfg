@@ -353,3 +353,31 @@ function addDificultad(valoracion) {
     })
 }
 
+app.get("/dificultad/:id", function (pet, resp) {
+    let reto =  parseInt(pet.params.id)
+
+    obtenerDificultad(reto)
+    .then(datos => {
+        resp.send({data:datos});
+    })
+    .catch(error => {
+        console.log(error)
+        resp.status(error.err);
+        resp.end();
+    })
+})
+
+function obtenerDificultad(reto) {
+    console.log(reto)
+    return new Promise((resolve, reject)=>{
+        knex('dificultad')
+        .select(knex.raw('AVG (valoracion) as valoracion'))
+        .where("reto", reto)
+        .then(datos => {
+            resolve(
+                parseInt(datos[0].valoracion)
+            )  
+        })
+    })
+}
+
