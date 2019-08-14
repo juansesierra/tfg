@@ -147,5 +147,42 @@ export class Servicio_API {
 
     }
 
+    getUser(id) {
+        var url = "http://localhost:3000/users/" + id;
+        return fetch (url, {
+            method: 'GET',
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
+
+    putUser(formData) {
+        var url = "http://localhost:3000/users";
+        return fetch (url, {
+            method: 'PUT',
+            body: formData
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
+
+    addDificultad(formData) {
+        var url = "http://localhost:3000/dificultad";
+        return fetch (url, {
+            method: 'POST',
+            body: formData
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
+
+    getDificultad(id) {
+        var url = "http://localhost:3000/dificultad/" + id;
+        return fetch (url, {
+            method: 'GET'
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
 }
 

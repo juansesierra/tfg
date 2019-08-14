@@ -6,7 +6,7 @@
                 <img class="card-img-top card-image" :src="'data:image/jpeg;base64,' + reto.foto" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">{{reto.nombre}}</h5>
-                    <a :href="'/resolver/' + reto.id" class="card-link">Resolver</a>
+                    <a :href="'/detallesReto/' + reto.id" class="card-link">Ver más</a>
                 </div>
             </div>
         </div>
