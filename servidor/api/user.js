@@ -310,3 +310,46 @@ function updateUser (usuario, callback) {
         
 }
 
+app.post("/dificultad", function(pet, resp){
+    var respuesta = {
+        data : 0
+    }
+    let valoracion =  pet.body
+
+    valoracion.reto = parseInt(valoracion.reto)
+    valoracion.usuario = parseInt(valoracion.usuario)
+    valoracion.valoracion = parseInt(valoracion.valoracion)
+
+    addDificultad(valoracion).then(datos => {
+        if (datos.err) {
+            resp.status(datos.err);
+            resp.end();
+        }
+        else {
+            
+            respuesta.data = "Valoración añadida";
+            resp.send(respuesta);
+        }
+    })
+
+})
+ 
+function addDificultad(valoracion) {
+    
+    return new Promise((resolve, reject)=>{
+        console.log(valoracion)
+        knex.select().from('dificultad').where("usuario", valoracion.usuario).then(datos => {
+            if(datos.length>0) {
+                knex('dificultad').where('usuario ', valoracion.usuario).update(valoracion).then(datos => {
+                    resolve({data: datos})
+                })
+            }
+            else {
+                knex('dificultad').insert(valoracion).then(datos => {
+                    resolve({data: datos})
+                })   
+            }
+        })
+    })
+}
+

@@ -166,5 +166,14 @@ export class Servicio_API {
         })
     }
 
+    addDificultad(formData) {
+        var url = "http://localhost:3000/dificultad";
+        return fetch (url, {
+            method: 'POST',
+            body: formData
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
 }
 

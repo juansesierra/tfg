@@ -89,7 +89,7 @@ input[type="radio"] {
   display: none;
 }
 
-.estrellas {
+.estrellas, .estrellas-fijas {
   color: grey;
   font-size: 1.5rem;
 }
@@ -134,6 +134,53 @@ input[type="radio"]:checked ~ label {
 
 .mt-5 {
   margin-top: 6rem !important;
+}
+
+/* Foto de perfil de usuarios */
+
+.mi-perfil {
+  margin-top: 6%;
+  padding: 0 10%;
+}
+
+.foto-perfil {
+  max-height: 300px;
+  margin-bottom: 20px;
+}
+
+/* Detalles Reto */
+.imagen-reto-container {
+  position: absolute;
+  top: 25%;
+  left: 2%;
+  width: 18rem;
+}
+
+.detalles-container {
+  position: relative;
+}
+
+.fondo-detalles {
+  width: 100%;
+  height: 400px;
+}
+
+.nombre-reto {
+  font-size: 90px;
+  line-height: 125px;
+
+}
+
+.contenido-detalles {
+  position: absolute;
+  width: 70%;
+  left: 28%;
+  text-align: left;
+}
+
+.btn-resolver {
+  float: right;
+  margin-top: 5%;
 }
 
 </style>
