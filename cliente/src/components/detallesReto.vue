@@ -43,7 +43,8 @@
                         <h1 class="nombre-reto">{{nombre}} <button @click.prevent="irResolver"  class="btn btn-resolver btn-primary"> Resolver </button></h1>
                     </div>
                     <span>Enunciado:</span><br>
-                    <span>{{this.descripcion}}</span>
+                    <span>{{this.descripcion}}</span><br><br>
+                    <span>Usuarios que han resuelto el reto:</span><br>
                 </div>
             </div>
         </div>

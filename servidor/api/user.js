@@ -368,7 +368,6 @@ app.get("/dificultad/:id", function (pet, resp) {
 })
 
 function obtenerDificultad(reto) {
-    console.log(reto)
     return new Promise((resolve, reject)=>{
         knex('dificultad')
         .select(knex.raw('AVG (valoracion) as valoracion'))
@@ -377,6 +376,37 @@ function obtenerDificultad(reto) {
             resolve(
                 parseInt(datos[0].valoracion)
             )  
+        })
+    })
+}
+
+app.get("/usuariosReto/:id", function (pet, resp) {
+    let reto =  parseInt(pet.params.id)
+
+    obtenerUsuariosReto(reto)
+    .then(datos => {
+        for (var i=0; i<datos.data.length; i++) {
+            datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+        }
+        resp.send(datos);
+    })
+    .catch(error => {
+        console.log(error)
+        resp.status(error.err);
+        resp.end();
+    })
+})
+
+function obtenerUsuariosReto(reto) {
+    return new Promise((resolve, reject)=>{
+        knex('usuario')
+        .join('reto_resuelto', 'usuario.id', 'reto_resuelto.usuario').where('reto_resuelto.reto', reto)
+        .select('usuario.login as login', 
+            'usuario.foto as foto'
+         ).then(datos => {
+            resolve({
+                data: datos
+            })  
         })
     })
 }
