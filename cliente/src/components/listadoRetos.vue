@@ -29,7 +29,6 @@
             }
         },
         created () {
-            console.log("entro")
             servicio_API.getRetos().then(respuesta => {   
                 console.log(respuesta)
                 if (respuesta.data) {

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin-bottom: 10%; height: 100%;">
         <navbar></navbar>
         <div class="mi-perfil">
             <div class="detalles-container">
@@ -43,7 +43,13 @@
                         <h1 class="nombre-reto">{{nombre}} <button @click.prevent="irResolver"  class="btn btn-resolver btn-primary"> Resolver </button></h1>
                     </div>
                     <span>Enunciado:</span><br>
-                    <span>{{this.descripcion}}</span>
+                    <span>{{this.descripcion}}</span><br><br>
+                    <span>Usuarios que han resuelto el reto:</span><br>
+                    <div>
+                        <img :src="'data:image/jpeg;base64,' + usuario.foto" class="avatar" v-for="usuario in usuarios" :key="usuario.id">
+                        <a :href="'/listadoUsuariosReto/' + this.id">Ver más</a>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,11 +71,13 @@ export default {
     name: 'Login',
     data () {
         return {
+            id: '',
             foto: '',
             nombre: '',
             descripcion: '',
             dificultad: '',
-            dificultad_usuario: ''
+            dificultad_usuario: '',
+            usuarios: ''
         }
     },
     methods: {
@@ -94,7 +102,9 @@ export default {
         }
     },
     created () {
-         servicio_API.getReto(this.$route.params.id).then(respuesta => {
+        this.id = this.$route.params.id;
+
+        servicio_API.getReto(this.$route.params.id).then(respuesta => {
                         
             if (respuesta.data) {
                 this.nombre = respuesta.data.nombre;
@@ -110,6 +120,14 @@ export default {
                         
             if (respuesta.data) {
                 this.dificultad_usuario = respuesta.data;
+            }
+           
+        }); 
+
+        servicio_API.getUsuariosReto(this.$route.params.id).then(respuesta => {
+                        
+            if (respuesta.data) {
+                this.usuarios = respuesta.data;
             }
            
         }); 

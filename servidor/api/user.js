@@ -368,7 +368,6 @@ app.get("/dificultad/:id", function (pet, resp) {
 })
 
 function obtenerDificultad(reto) {
-    console.log(reto)
     return new Promise((resolve, reject)=>{
         knex('dificultad')
         .select(knex.raw('AVG (valoracion) as valoracion'))
@@ -381,3 +380,70 @@ function obtenerDificultad(reto) {
     })
 }
 
+app.get("/usuariosReto/:id", function (pet, resp) {
+    let reto =  parseInt(pet.params.id)
+
+    obtenerUsuariosReto(reto)
+    .then(datos => {
+        for (var i=0; i<datos.data.length; i++) {
+            datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+            datos.data[i].fichero = fs.readFileSync(datos.data[i].fichero).toString();
+        }
+        resp.send(datos);
+    })
+    .catch(error => {
+        console.log(error)
+        resp.status(error.err);
+        resp.end();
+    })
+})
+
+function obtenerUsuariosReto(reto) {
+    return new Promise((resolve, reject)=>{
+        knex('usuario')
+        .join('reto_resuelto', 'usuario.id', 'reto_resuelto.usuario').where('reto_resuelto.reto', reto)
+        .select('usuario.id as id', 
+            'usuario.login as login', 
+            'usuario.foto as foto',
+            'reto_resuelto.fichero as fichero'
+         ).then(datos => {
+            resolve({
+                data: datos
+            })  
+        })
+    })
+}
+
+app.post("/usuariosReto/", function (pet, resp) {
+    let reto =  parseInt(pet.body.reto)
+    let usuario =  parseInt(pet.body.usuario)
+
+
+    obtenerUsuarioResuelto(reto, usuario)
+    .then(datos => {
+        resp.send(datos);
+    })
+    .catch(error => {
+        console.log(error)
+        resp.status(error.err);
+        resp.end();
+    })
+})
+
+function obtenerUsuarioResuelto(reto, usuario) {
+    
+    return new Promise((resolve, reject)=>{
+        knex('reto_resuelto')
+        .select()
+        .where({'usuario': usuario, 'reto':reto})
+        .then(datos => {
+            let resuelto = false;
+            if (datos.length>0) {
+                resuelto = true;
+            }
+            resolve({
+                data: resuelto
+            })  
+        })
+    })
+}
