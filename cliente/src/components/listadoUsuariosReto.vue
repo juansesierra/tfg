@@ -10,7 +10,7 @@
                             <img :src="'data:image/jpeg;base64,' + usuario.foto" class="avatar">
                             <label>{{usuario.login}}</label>
                         </div>
-                        <div class="col-sm-8 btn-container">
+                        <div class="col-sm-8 btn-container" v-if="resuelto">
                             <b-button @click="mostrarSolucion(usuario)" variant="primary"> Ver Solución </b-button>
                         </div>
                     </div>
@@ -37,7 +37,8 @@
             return {
                 usuarios: '',
                 solucion: '',
-                user: ''
+                user: '',
+                resuelto: false
             }
         },
         methods: {
@@ -53,6 +54,21 @@
                         
                 if (respuesta.data) {
                     this.usuarios = respuesta.data;
+                }
+            
+            }); 
+
+
+            var formData = new FormData();
+
+            formData.append('usuario', localStorage.getItem('id_usuario'))
+            formData.append('reto', this.$route.params.id)
+
+
+            servicio_API.getUsuarioResuelto(formData).then(respuesta => {
+                        
+                if (respuesta.data) {
+                    this.resuelto = respuesta.data;
                 }
             
             }); 

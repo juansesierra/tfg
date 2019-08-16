@@ -30,7 +30,6 @@
             }
         },
         created () {
-            console.log("entro")
             var formData = new FormData();
 
             formData.append('usuario', localStorage.getItem('id_usuario'))

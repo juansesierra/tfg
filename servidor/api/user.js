@@ -414,3 +414,36 @@ function obtenerUsuariosReto(reto) {
     })
 }
 
+app.post("/usuariosReto/", function (pet, resp) {
+    let reto =  parseInt(pet.body.reto)
+    let usuario =  parseInt(pet.body.usuario)
+
+
+    obtenerUsuarioResuelto(reto, usuario)
+    .then(datos => {
+        resp.send(datos);
+    })
+    .catch(error => {
+        console.log(error)
+        resp.status(error.err);
+        resp.end();
+    })
+})
+
+function obtenerUsuarioResuelto(reto, usuario) {
+    
+    return new Promise((resolve, reject)=>{
+        knex('reto_resuelto')
+        .select()
+        .where({'usuario': usuario, 'reto':reto})
+        .then(datos => {
+            let resuelto = false;
+            if (datos.length>0) {
+                resuelto = true;
+            }
+            resolve({
+                data: resuelto
+            })  
+        })
+    })
+}
