@@ -165,7 +165,8 @@ function listarRetosResueltos(usuario) {
                 'reto.nombre as nombre', 
                 'reto.descripcion as descripcion', 
                 'reto.foto as foto'
-        ).then(datos => {
+        ).where("reto_resuelto.usuario", usuario)
+        .then(datos => {
             resolve({
                 data: datos
             })  

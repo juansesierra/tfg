@@ -1,21 +1,24 @@
 <template>
     <div>
         <navbar></navbar>
-        <div class="mi-perfil">
+        <div class="usuarios-container">
             <div class="detalles-container">
                 <img class ="fondo-detalles" src="../assets/jugadores.jpeg">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item" v-for="usuario in usuarios" :key="usuario.id">
-                        <img :src="'data:image/jpeg;base64,' + usuario.foto" class="avatar">
-                        <span>{{usuario.login}}</span>
-                        <b-button @click="mostrarSolucion(usuario)"  class="btn btn-resolver btn-primary"> Ver Solución </b-button>
-                        
-                    </li>
+                    <div class="list-group-item row fila" v-for="usuario in usuarios" :key="usuario.id">
+                        <div class="col-sm-3">
+                            <img :src="'data:image/jpeg;base64,' + usuario.foto" class="avatar">
+                            <label>{{usuario.login}}</label>
+                        </div>
+                        <div class="col-sm-8 btn-container">
+                            <b-button @click="mostrarSolucion(usuario)" variant="primary"> Ver Solución </b-button>
+                        </div>
+                    </div>
                 </ul>
             </div>
         </div>
         <b-modal ref="solucion" hide-footer :title="'Solución de ' + user">
-            <textarea class="form-control" v-model="solucion" rows="16" id="codigo" disabled></textarea>
+            <textarea class="form-control" style="background:white" v-model="solucion" rows="16" id="codigo" disabled></textarea>
         </b-modal>
     </div>
 </template>

@@ -191,4 +191,24 @@ input[type="radio"]:checked ~ label {
   margin: 5px;
 }
 
+/* Usuarios que han resuelto el reto */
+
+.usuarios-container {
+  margin-top: 6%;
+  padding: 0 15%;
+}
+
+.nick-name {
+  margin-right: 45%;
+}
+
+.fila {
+  display: flex;
+  line-height: 60px;
+}
+
+.btn-container {
+  text-align: right;
+}
+
 </style>
