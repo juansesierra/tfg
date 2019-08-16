@@ -387,6 +387,7 @@ app.get("/usuariosReto/:id", function (pet, resp) {
     .then(datos => {
         for (var i=0; i<datos.data.length; i++) {
             datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+            datos.data[i].fichero = fs.readFileSync(datos.data[i].fichero).toString();
         }
         resp.send(datos);
     })
@@ -401,8 +402,10 @@ function obtenerUsuariosReto(reto) {
     return new Promise((resolve, reject)=>{
         knex('usuario')
         .join('reto_resuelto', 'usuario.id', 'reto_resuelto.usuario').where('reto_resuelto.reto', reto)
-        .select('usuario.login as login', 
-            'usuario.foto as foto'
+        .select('usuario.id as id', 
+            'usuario.login as login', 
+            'usuario.foto as foto',
+            'reto_resuelto.fichero as fichero'
          ).then(datos => {
             resolve({
                 data: datos

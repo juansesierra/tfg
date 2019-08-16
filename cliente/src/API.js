@@ -184,5 +184,14 @@ export class Servicio_API {
                 return respuesta.json();
         })
     }
+
+    getUsuariosReto(id) {
+        var url = "http://localhost:3000/usuariosReto/" + id;
+        return fetch (url, {
+            method: 'GET'
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
 }
 

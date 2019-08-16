@@ -183,4 +183,12 @@ input[type="radio"]:checked ~ label {
   margin-top: 5%;
 }
 
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 5px;
+}
+
 </style>
