@@ -361,9 +361,14 @@ app.get("/dificultad/:id", function (pet, resp) {
         resp.send({data:datos});
     })
     .catch(error => {
-        console.log(error)
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 })
 
@@ -392,9 +397,14 @@ app.get("/usuariosReto/:id", function (pet, resp) {
         resp.send(datos);
     })
     .catch(error => {
-        console.log(error)
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 })
 
@@ -424,9 +434,14 @@ app.post("/usuariosReto/", function (pet, resp) {
         resp.send(datos);
     })
     .catch(error => {
-        console.log(error)
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 })
 
@@ -460,9 +475,14 @@ app.get("/ranking", function (pet, resp) {
         resp.send(datos);
     })
     .catch(error => {
-        console.log(error)
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 })
 
@@ -544,9 +564,14 @@ app.get("/comentarios/:id", function (pet, resp) {
         resp.send(datos);
     })
     .catch(error => {
-        console.log(error)
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 })
 
