@@ -211,4 +211,15 @@ input[type="radio"]:checked ~ label {
   text-align: right;
 }
 
+/* Ranking */
+.titulo {
+  position: absolute;
+  color: white;
+  top: 95%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  font-size: 3rem;
+  font-weight: bold;
+}
+
 </style>

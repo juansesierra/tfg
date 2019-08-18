@@ -447,3 +447,39 @@ function obtenerUsuarioResuelto(reto, usuario) {
         })
     })
 }
+
+
+app.get("/ranking", function (pet, resp) {
+
+    obtenerRanking()
+    .then(datos => {
+        for (var i=0; i<datos.data.length; i++) {
+            datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+            datos.data[i].puntuacion = datos.data[i].puntuacion * 10;
+        }
+        resp.send(datos);
+    })
+    .catch(error => {
+        console.log(error)
+        resp.status(error.err);
+        resp.end();
+    })
+})
+
+function obtenerRanking() {
+    return new Promise((resolve, reject)=>{
+        knex('usuario')
+        .join('reto_resuelto', 'usuario.id', 'reto_resuelto.usuario')
+        .join('reto', 'reto.id', 'reto_resuelto.reto')
+        .groupBy('usuario.login')
+        .orderBy('puntuacion', 'desc')
+        .select( 'usuario.login as login', 
+            'usuario.foto as foto',
+            knex.raw('SUM (dificultad) as puntuacion'))
+        .then(datos => {
+            resolve({
+                data: datos
+            })  
+        })
+    })
+}
