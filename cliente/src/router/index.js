@@ -11,6 +11,7 @@ import retosResueltos from '@/components/retosResueltos'
 import miPerfil from '@/components/miPerfil'
 import detallesReto from '@/components/detallesReto'
 import listadoUsuariosReto from '@/components/listadoUsuariosReto'
+import ranking from '@/components/ranking'
 
 
 Vue.use(Router)
@@ -128,6 +129,19 @@ export default new Router({
       path: '/listadoUsuariosReto/:id',
       name: 'listadoUsuariosReto',
       component: listadoUsuariosReto,
+      beforeEnter: (to, from, next) => { 
+        if (!localStorage.token) {
+          next('login');
+        }
+        else {
+          next();  
+        }
+      } 
+    },
+    {
+      path: '/ranking',
+      name: 'ranking',
+      component: ranking,
       beforeEnter: (to, from, next) => { 
         if (!localStorage.token) {
           next('login');

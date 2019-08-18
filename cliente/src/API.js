@@ -203,5 +203,14 @@ export class Servicio_API {
                 return respuesta.json();
         })
     }
+
+    getRanking() {
+        var url = "http://localhost:3000/ranking";
+        return fetch (url, {
+            method: 'GET',
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
 }
 

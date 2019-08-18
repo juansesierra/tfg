@@ -453,6 +453,10 @@ app.get("/ranking", function (pet, resp) {
 
     obtenerRanking()
     .then(datos => {
+        for (var i=0; i<datos.data.length; i++) {
+            datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+            datos.data[i].puntuacion = datos.data[i].puntuacion * 10;
+        }
         resp.send(datos);
     })
     .catch(error => {

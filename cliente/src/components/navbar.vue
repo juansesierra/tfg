@@ -6,15 +6,18 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="/misRetos">Mis retos <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/retosResueltos">Retos resueltos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/addReto">Nuevo reto</a>
-            </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/ranking">Ranking<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/misRetos">Mis retos <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/retosResueltos">Retos resueltos</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/addReto">Nuevo reto</a>
+                </li>
             </ul>
         </div>
         <div class="navbar-collapse collapse order-3 dual-collapse2">
