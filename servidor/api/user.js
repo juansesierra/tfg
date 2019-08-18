@@ -483,3 +483,51 @@ function obtenerRanking() {
         })
     })
 }
+
+app.post("/comentarios", function(pet, resp){
+    var respuesta = {
+        data : 0
+    }
+    let params =  pet.body
+
+    params.reto = parseInt(params.reto)
+    params.usuario = parseInt(params.usuario)
+
+    addComentario(params).then(datos => {
+        if (datos.err) {
+            resp.status(datos.err);
+            resp.end();
+        }
+        else {
+            respuesta.data = "Comentario añadido";
+            resp.send(respuesta);
+        }
+    })
+    .catch(error => {
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
+    })
+
+})
+ 
+function addComentario(params) {
+    
+    return new Promise((resolve, reject)=>{
+        knex.select().from('reto').where("id", params.reto).then(datos => {
+            if(datos.length<1) {
+                reject({err: 404})
+            }
+            else {
+                knex('comentario').insert(params).then(datos => {
+                    resolve({data: datos})
+                })   
+            }
+        })
+    })
+}
