@@ -531,3 +531,36 @@ function addComentario(params) {
         })
     })
 }
+
+app.get("/comentarios/:id", function (pet, resp) {
+
+    let reto = pet.params.id;
+
+    obtenerComentarios(reto)
+    .then(datos => {
+        for (var i=0; i<datos.data.length; i++) {
+            datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+        }
+        resp.send(datos);
+    })
+    .catch(error => {
+        console.log(error)
+        resp.status(error.err);
+        resp.end();
+    })
+})
+
+function obtenerComentarios(reto) {
+    return new Promise((resolve, reject)=>{
+        knex('comentario')
+        .join('usuario', 'usuario.id', 'comentario.usuario')
+        .select('comentario.*',
+        'usuario.foto')
+        .where('reto', reto)
+        .then(datos => {
+            resolve({
+                data: datos
+            })  
+        })
+    })
+}
