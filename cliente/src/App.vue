@@ -191,6 +191,42 @@ input[type="radio"]:checked ~ label {
   margin: 5px;
 }
 
+#usuarios_resueltos {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  padding-bottom: 1rem;
+}
+
+.nuevo_comentario {
+  width: 100%;
+  border: none;
+}
+
+.comentario_container{
+  display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  padding: 5% 0;
+}
+
+.texto {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  padding: 1%;
+  width: 100%;
+}
+
+.btn-derecha {
+  float: right;
+}
+
+.comentario {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  font-size: initial;
+}
+
 /* Usuarios que han resuelto el reto */
 
 .usuarios-container {

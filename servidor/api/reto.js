@@ -21,8 +21,14 @@ app.get("/retos/:id", function(pet, resp){
         
     })
     .catch(error => {
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 
 })
@@ -84,6 +90,15 @@ app.get("/retos", function(pet, resp){
             respuesta.data = datos.data;
             resp.send(respuesta);
         }
+    }).catch(error => {
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 
 })
@@ -118,6 +133,15 @@ app.post("/misRetos", function(pet, resp){
             respuesta.data = datos.data;
             resp.send(respuesta);
         }
+    }).catch(error => {
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 
 })
@@ -152,6 +176,15 @@ app.post("/retosResueltos", function(pet, resp){
             respuesta.data = datos.data;
             resp.send(respuesta);
         }
+    }).catch(error => {
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 
 })
@@ -473,8 +506,14 @@ app.put('/retos', function (req, resp) {
             resp.send(responseObj)
         })
         .catch(error => {
-            resp.status(error.err);
-            resp.end();
+            if (error.err) {
+                resp.status(error.err)
+            }
+            else {
+                resp.status(500)
+            }
+            
+            resp.send({error: error.message})
         })
     } catch(err) {
         resp.status(500)

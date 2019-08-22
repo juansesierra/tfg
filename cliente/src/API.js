@@ -212,5 +212,24 @@ export class Servicio_API {
                 return respuesta.json();
         })
     }
+
+    enviarComentario(formData) {
+        var url = "http://localhost:3000/comentarios";
+        return fetch (url, {
+            method: 'POST',
+            body: formData
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
+
+    getComentarios(id) {
+        var url = "http://localhost:3000/comentarios/" + id;
+        return fetch (url, {
+            method: 'GET'
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
 }
 

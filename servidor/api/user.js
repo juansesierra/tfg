@@ -98,7 +98,8 @@ app.post('/login',function(req,resp){
 				resp.status(user.err)
 				resp.end()
 			}else{
-				responseObj.data = user.data[0];
+                responseObj.data = user.data[0];
+                responseObj.data.foto = fs.readFileSync(user.data[0].foto, 'base64');
 				responseObj.token = jwt.encode(user.data, 'credencial')
 				resp.send(responseObj)
 			}
@@ -337,7 +338,6 @@ app.post("/dificultad", function(pet, resp){
 function addDificultad(valoracion) {
     
     return new Promise((resolve, reject)=>{
-        console.log(valoracion)
         knex.select().from('dificultad').where("usuario", valoracion.usuario).then(datos => {
             if(datos.length>0) {
                 knex('dificultad').where('usuario ', valoracion.usuario).update(valoracion).then(datos => {
@@ -361,9 +361,14 @@ app.get("/dificultad/:id", function (pet, resp) {
         resp.send({data:datos});
     })
     .catch(error => {
-        console.log(error)
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 })
 
@@ -392,9 +397,14 @@ app.get("/usuariosReto/:id", function (pet, resp) {
         resp.send(datos);
     })
     .catch(error => {
-        console.log(error)
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 })
 
@@ -424,9 +434,14 @@ app.post("/usuariosReto/", function (pet, resp) {
         resp.send(datos);
     })
     .catch(error => {
-        console.log(error)
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 })
 
@@ -460,9 +475,14 @@ app.get("/ranking", function (pet, resp) {
         resp.send(datos);
     })
     .catch(error => {
-        console.log(error)
-        resp.status(error.err);
-        resp.end();
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
     })
 })
 
@@ -476,6 +496,93 @@ function obtenerRanking() {
         .select( 'usuario.login as login', 
             'usuario.foto as foto',
             knex.raw('SUM (dificultad) as puntuacion'))
+        .then(datos => {
+            resolve({
+                data: datos
+            })  
+        })
+    })
+}
+
+app.post("/comentarios", function(pet, resp){
+    var respuesta = {
+        data : 0
+    }
+    let params =  pet.body
+
+    params.reto = parseInt(params.reto)
+    params.usuario = parseInt(params.usuario)
+
+    addComentario(params).then(datos => {
+        if (datos.err) {
+            resp.status(datos.err);
+            resp.end();
+        }
+        else {
+            respuesta.data = datos;
+            resp.send(respuesta);
+        }
+    })
+    .catch(error => {
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
+    })
+
+})
+ 
+function addComentario(params) {
+    
+    return new Promise((resolve, reject)=>{
+        knex.select().from('reto').where("id", params.reto).then(datos => {
+            if(datos.length<1) {
+                reject({err: 404})
+            }
+            else {
+                knex('comentario').insert(params).then(datos => {
+                    resolve(datos)
+                })   
+            }
+        })
+    })
+}
+
+app.get("/comentarios/:id", function (pet, resp) {
+
+    let reto = pet.params.id;
+
+    obtenerComentarios(reto)
+    .then(datos => {
+        for (var i=0; i<datos.data.length; i++) {
+            datos.data[i].foto = fs.readFileSync(datos.data[i].foto, 'base64');
+        }
+        resp.send(datos);
+    })
+    .catch(error => {
+        if (error.err) {
+            resp.status(error.err)
+        }
+        else {
+            resp.status(500)
+        }
+        
+        resp.send({error: error.message})
+    })
+})
+
+function obtenerComentarios(reto) {
+    return new Promise((resolve, reject)=>{
+        knex('comentario')
+        .join('usuario', 'usuario.id', 'comentario.usuario')
+        .select('comentario.*',
+        'usuario.foto')
+        .where('reto', reto)
+        .orderBy('comentario.id', 'desc')
         .then(datos => {
             resolve({
                 data: datos

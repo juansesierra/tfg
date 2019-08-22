@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-bottom: 10%; height: 100%;">
+    <div style="margin-bottom: 25%; height: 100%;">
         <navbar></navbar>
         <div class="mi-perfil">
             <div class="detalles-container">
@@ -44,11 +44,24 @@
                     </div>
                     <span>Enunciado:</span><br>
                     <span>{{this.descripcion}}</span><br><br>
-                    <span>Usuarios que han resuelto el reto:</span><br>
-                    <div>
+                    <span v-if="usuarios.lenght>0">Usuarios que han resuelto el reto:</span><br>
+                    <div id="usuarios_resueltos" v-if="usuarios.lenght>0"> 
                         <img :src="'data:image/jpeg;base64,' + usuario.foto" class="avatar" v-for="usuario in usuarios" :key="usuario.id">
                         <a :href="'/listadoUsuariosReto/' + this.id">Ver más</a>
+                    </div>
+                    <div class="comentario_container">
+                        <img :src="'data:image/jpeg;base64,' + foto_usuario" class="avatar">
+                        <div class="texto">
+                            <textarea rows="5" class="nuevo_comentario" v-model="nuevo_comentario" placeholder="Escribe algún comentario"></textarea>
+                            <button @click.prevent="enviarComentario" class="btn btn-primary btn-derecha"> Enviar </button>
+                        </div>
+                    </div>
 
+                    <div class="comentario_container" v-for="comentario in comentarios" :key="comentario.id">
+                        <img :src="'data:image/jpeg;base64,' + comentario.foto" class="avatar">
+                        <div class="texto">
+                            <pre class="comentario">{{comentario.comentario}}</pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,7 +90,10 @@ export default {
             descripcion: '',
             dificultad: '',
             dificultad_usuario: '',
-            usuarios: ''
+            usuarios: '',
+            foto_usuario: '',
+            nuevo_comentario: '',
+            comentarios:''
         }
     },
     methods: {
@@ -99,10 +115,32 @@ export default {
                 }
             
             });        
+        },
+        enviarComentario: function () {
+            var formData = new FormData();
+
+            formData.append('reto', this.$route.params.id)
+            formData.append('usuario', localStorage.getItem('id_usuario'))
+            formData.append('comentario', this.nuevo_comentario)
+
+            servicio_API.enviarComentario(formData).then(respuesta => {
+                                    
+                if (respuesta.data) {
+                    console.log(respuesta.data)
+                    this.comentarios.unshift({
+                        id: respuesta.data,
+                        foto: this.foto_usuario,
+                        comentario : this.nuevo_comentario 
+                    })
+                    this.nuevo_comentario = '';
+                }
+            
+            }); 
         }
     },
     created () {
         this.id = this.$route.params.id;
+        this.foto_usuario = localStorage.getItem('foto_usuario');
 
         servicio_API.getReto(this.$route.params.id).then(respuesta => {
                         
@@ -128,9 +166,19 @@ export default {
                         
             if (respuesta.data) {
                 this.usuarios = respuesta.data;
+                this.usuarios.splice(4);
             }
            
         }); 
+
+        servicio_API.getComentarios(this.$route.params.id).then(respuesta => {
+                        
+            if (respuesta.data) {
+                this.comentarios = respuesta.data;
+            }
+           
+        }); 
+    
     }
 }
 </script>
