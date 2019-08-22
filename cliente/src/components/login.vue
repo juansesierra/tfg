@@ -60,6 +60,7 @@ export default {
                     localStorage.setItem('usuario', respuesta.data.login);
                     localStorage.setItem('id_usuario', respuesta.data.id);
                     localStorage.setItem('token', respuesta.token);
+                    localStorage.setItem('foto_usuario', respuesta.data.foto);
 
                     window.location.replace("/");
                 }

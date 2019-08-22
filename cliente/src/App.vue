@@ -191,6 +191,31 @@ input[type="radio"]:checked ~ label {
   margin: 5px;
 }
 
+#usuarios_resueltos {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  padding-bottom: 1rem;
+  margin-bottom: 30px;
+}
+
+.nuevo_comentario {
+  width: 100%;
+  border: none;
+}
+
+.comentario_container{
+  display: flex;
+}
+
+.texto {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  padding: 1%;
+  width: 100%;
+}
+
+.btn-derecha {
+  float: right;
+}
+
 /* Usuarios que han resuelto el reto */
 
 .usuarios-container {

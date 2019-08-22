@@ -98,7 +98,8 @@ app.post('/login',function(req,resp){
 				resp.status(user.err)
 				resp.end()
 			}else{
-				responseObj.data = user.data[0];
+                responseObj.data = user.data[0];
+                responseObj.data.foto = fs.readFileSync(user.data[0].foto, 'base64');
 				responseObj.token = jwt.encode(user.data, 'credencial')
 				resp.send(responseObj)
 			}
@@ -337,7 +338,6 @@ app.post("/dificultad", function(pet, resp){
 function addDificultad(valoracion) {
     
     return new Promise((resolve, reject)=>{
-        console.log(valoracion)
         knex.select().from('dificultad').where("usuario", valoracion.usuario).then(datos => {
             if(datos.length>0) {
                 knex('dificultad').where('usuario ', valoracion.usuario).update(valoracion).then(datos => {
