@@ -166,6 +166,7 @@ export default {
                         
             if (respuesta.data) {
                 this.usuarios = respuesta.data;
+                this.usuarios.splice(4);
             }
            
         }); 
