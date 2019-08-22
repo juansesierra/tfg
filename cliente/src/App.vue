@@ -194,7 +194,6 @@ input[type="radio"]:checked ~ label {
 #usuarios_resueltos {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
   padding-bottom: 1rem;
-  margin-bottom: 30px;
 }
 
 .nuevo_comentario {
@@ -204,6 +203,8 @@ input[type="radio"]:checked ~ label {
 
 .comentario_container{
   display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  padding: 5% 0;
 }
 
 .texto {
@@ -214,6 +215,16 @@ input[type="radio"]:checked ~ label {
 
 .btn-derecha {
   float: right;
+}
+
+.comentario {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  font-size: initial;
 }
 
 /* Usuarios que han resuelto el reto */

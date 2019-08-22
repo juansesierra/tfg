@@ -56,6 +56,13 @@
                             <button @click.prevent="enviarComentario" class="btn btn-primary btn-derecha"> Enviar </button>
                         </div>
                     </div>
+
+                    <div class="comentario_container" v-for="comentario in comentarios" :key="comentario.id">
+                        <img :src="'data:image/jpeg;base64,' + comentario.foto" class="avatar">
+                        <div class="texto">
+                            <pre class="comentario">{{comentario.comentario}}</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,7 +92,8 @@ export default {
             dificultad_usuario: '',
             usuarios: '',
             foto_usuario: '',
-            nuevo_comentario: ''
+            nuevo_comentario: '',
+            comentarios:''
         }
     },
     methods: {
@@ -119,6 +127,11 @@ export default {
                                     
                 if (respuesta.data) {
                     console.log(respuesta.data)
+                    this.comentarios.unshift({
+                        id: respuesta.data,
+                        foto: this.foto_usuario,
+                        comentario : this.nuevo_comentario 
+                    })
                     this.nuevo_comentario = '';
                 }
             
@@ -156,6 +169,15 @@ export default {
             }
            
         }); 
+
+        servicio_API.getComentarios(this.$route.params.id).then(respuesta => {
+                        
+            if (respuesta.data) {
+                this.comentarios = respuesta.data;
+            }
+           
+        }); 
+    
     }
 }
 </script>

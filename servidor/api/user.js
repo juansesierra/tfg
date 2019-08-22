@@ -519,7 +519,7 @@ app.post("/comentarios", function(pet, resp){
             resp.end();
         }
         else {
-            respuesta.data = "Comentario añadido";
+            respuesta.data = datos;
             resp.send(respuesta);
         }
     })
@@ -545,7 +545,7 @@ function addComentario(params) {
             }
             else {
                 knex('comentario').insert(params).then(datos => {
-                    resolve({data: datos})
+                    resolve(datos)
                 })   
             }
         })
@@ -582,6 +582,7 @@ function obtenerComentarios(reto) {
         .select('comentario.*',
         'usuario.foto')
         .where('reto', reto)
+        .orderBy('comentario.id', 'desc')
         .then(datos => {
             resolve({
                 data: datos

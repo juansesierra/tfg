@@ -222,5 +222,14 @@ export class Servicio_API {
                 return respuesta.json();
         })
     }
+
+    getComentarios(id) {
+        var url = "http://localhost:3000/comentarios/" + id;
+        return fetch (url, {
+            method: 'GET'
+        }). then (function (respuesta) {
+                return respuesta.json();
+        })
+    }
 }
 
