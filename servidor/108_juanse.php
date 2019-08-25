@@ -1,1 +1,3 @@
-<? echo 'abeurp';
+<? 
+ $palabra = file($argv[1])[0];
+ echo strrev ($palabra);

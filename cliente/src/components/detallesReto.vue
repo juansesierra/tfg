@@ -43,9 +43,9 @@
                         <h1 class="nombre-reto">{{nombre}} <button @click.prevent="irResolver"  class="btn btn-resolver btn-primary"> Resolver </button></h1>
                     </div>
                     <span>Enunciado:</span><br>
-                    <span>{{this.descripcion}}</span><br><br>
-                    <span v-if="usuarios.lenght>0">Usuarios que han resuelto el reto:</span><br>
-                    <div id="usuarios_resueltos" v-if="usuarios.lenght>0"> 
+                    <span class="comentario">{{this.descripcion}}</span>
+                    <span v-if="usuarios.length>0">Usuarios que han resuelto el reto:</span><br>
+                    <div id="usuarios_resueltos" v-if="usuarios.length>0"> 
                         <img :src="'data:image/jpeg;base64,' + usuario.foto" class="avatar" v-for="usuario in usuarios" :key="usuario.id">
                         <a :href="'/listadoUsuariosReto/' + this.id">Ver más</a>
                     </div>

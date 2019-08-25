@@ -4,7 +4,7 @@
         <div class="col-lg-6">
             <div id="enunciado-container" class="cuadrados">
                 <span>Enunciado</span><br>
-                <span>{{this.descripcion}}</span>
+                <span class="comentario">{{this.descripcion}}</span>
 
                 
             </div>

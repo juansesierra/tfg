@@ -47,9 +47,17 @@ function obtenerReto(id) {
             'solucion_reto.salida as salida',
             'solucion_reto.id as id_solucion'
          ).then(datos => {
-            resolve({
-                data: datos
-            })  
+             if (datos.length>0) {
+                 resolve({
+                     data: datos
+                 })  
+            }
+            else {
+                reject ({
+                    err: 404,
+                    message: "No existe el reto buscado"
+                })
+            }
         })
     })
 }
